@@ -1,0 +1,69 @@
+plugins {
+    id "org.jetbrains.kotlin.jvm" version "1.5.20"
+    id "com.diffplug.spotless" version "5.14.0"
+}
+
+apply plugin: 'kotlin'
+apply plugin: 'kotlin-kapt'
+apply from: "dependencies.gradle"
+
+group publishing.group
+version publishing.version
+
+repositories {
+    mavenCentral()
+}
+
+sourceSets {
+    main.java.srcDirs += 'src/main/kotlin/'
+    test.java.srcDirs += 'src/test/kotlin/'
+}
+
+spotless {
+    kotlin {
+        ktfmt(versions.ktfmt.toString()).dropboxStyle()
+    }
+}
+
+dependencies {
+    // Kotlin
+    implementation deps.kotlin.stdlib
+    implementation deps.kotlin.reflect
+    // Clikt
+    implementation deps.clikt
+    // DI - Kodein
+    implementation deps.kodein
+    // JDOM
+    implementation deps.jdom
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    // Testing
+    testImplementation deps.testing.mockk
+    testImplementation deps.testing.kluent
+    testImplementation deps.testing.junit
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': publishing.main_class
+    }
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    destinationDirectory = file(publishing.jar_out_directory)
+    archiveFileName.set(publishing.archive_name.toString())
+}
+
+test {
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = versions.jvm_target
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = versions.jvm_target
+}
+
+rootProject.tasks.named("jar") {
+    duplicatesStrategy = 'include'
+}

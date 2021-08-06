@@ -1,5 +1,12 @@
 # Compiled class file
+.gradle
+/local.properties
+.DS_Store
+build
 *.class
+
+# Idea
+.idea/**
 
 # Log file
 *.log
