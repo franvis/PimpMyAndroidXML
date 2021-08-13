@@ -31,15 +31,9 @@ dependencies {
     implementation deps.kotlin.reflect
     // Clikt
     implementation deps.clikt
-    // DI - Kodein
-    implementation deps.kodein
     // JDOM
     implementation deps.jdom
     implementation 'org.apache.commons:commons-lang3:3.12.0'
-    // Testing
-    testImplementation deps.testing.mockk
-    testImplementation deps.testing.kluent
-    testImplementation deps.testing.junit
 }
 
 jar {

@@ -9,12 +9,8 @@ ext.publishing = publishing
 def versions = [:]
 versions.kotlin = "1.5.20"
 versions.clikt = "3.2.0"
-versions.kodein = "7.0.0"
 versions.ktfmt = "0.25"
 versions.jvm_target = "1.8"
-versions.junit = "4.12"
-versions.kluent = "1.67"
-versions.mockk = "1.11.0"
 versions.jdom = "2.0.6"
 ext.versions = versions
 
@@ -28,12 +24,7 @@ deps.kotlin = kotlin
 deps.clikt = "com.github.ajalt.clikt:clikt:$versions.clikt"
 // JDOM
 deps.jdom = "org.jdom:jdom2:$versions.jdom"
-// DI - Kodein
-deps.kodein = "org.kodein.di:kodein-di:$versions.kodein"
 // Testing
 def testing = [:]
-testing.mockk = "io.mockk:mockk:$versions.mockk"
-testing.kluent = "org.amshove.kluent:kluent:$versions.kluent"
-testing.junit = "junit:junit:$versions.junit"
 deps.testing = testing
 ext.deps = deps
