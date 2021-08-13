@@ -25,9 +25,9 @@ internal object AndroidLayoutFormattingConfig {
 
     /**
      * Provides the order in which we want to organise our attributes namespaces within elements as
-     * an ordered array
+     * an ordered array. "" is meant for attribute that don't have a namespace such as style
      */
-    val NAMESPACE_ORDER = arrayOf("android", "app", "tools")
+    val NAMESPACE_ORDER = arrayOf("android", "", "app", "tools")
 
     /**
      * Provides the order in which we want to organise our attributes names within elements as an

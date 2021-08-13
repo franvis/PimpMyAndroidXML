@@ -10,9 +10,6 @@ class AttributeComparator {
 
         checkedAttributes.sortWith { a1, a2 ->
             if (a1.namespacePrefix != a2.namespacePrefix) {
-                if (a1.name == "style") {
-                    return@sortWith if (a2.namespacePrefix == "app") -1 else 1
-                }
                 AndroidLayoutFormattingConfig.NAMESPACE_ORDER.forEach { namespace ->
                     if (a1.namespacePrefix == namespace) {
                         return@sortWith -1
