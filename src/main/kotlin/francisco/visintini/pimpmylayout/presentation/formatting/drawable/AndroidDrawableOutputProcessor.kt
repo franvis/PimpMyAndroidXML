@@ -13,7 +13,6 @@ import org.jdom2.output.support.AbstractXMLOutputProcessor
 import org.jdom2.output.support.FormatStack
 import org.jdom2.util.NamespaceStack
 
-@Suppress("UNCHECKED_CAST")
 class AndroidDrawableOutputProcessor(
     private val attributeComparator: AttributeComparator,
     private val elementContentAnalyzer: ElementContentAnalyzer
@@ -54,7 +53,6 @@ class AndroidDrawableOutputProcessor(
             writer.write(AndroidXmlConstants.ELEMENT_CLOSURE_WITHOUT_QUALIFIED_NAME)
         } else {
             writer.write(AndroidXmlConstants.QUALIFIED_NAME_CLOSURE_END)
-            newline(formatStack, writer)
             if (elementContentAnalyzer.nextNonText(content, start) < size) {
                 newline(formatStack, writer)
                 printContentRange(
@@ -69,8 +67,6 @@ class AndroidDrawableOutputProcessor(
             printQualifiedName(writer, element)
             writer.write(AndroidXmlConstants.QUALIFIED_NAME_CLOSURE_END)
         }
-
-        newline(formatStack, writer)
     }
 
     private fun printElementNamespace(writer: Writer, formatStack: FormatStack, element: Element) {

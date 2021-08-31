@@ -1,6 +1,8 @@
 package francisco.visintini.pimpmylayout.presentation.formatting.layout
 
 import francisco.visintini.pimpmylayout.presentation.formatting.AndroidXmlConstants
+import francisco.visintini.pimpmylayout.presentation.formatting.drawable.AndroidDrawableOutputProcessor
+import francisco.visintini.pimpmylayout.presentation.formatting.drawable.DrawableFileProvider
 import java.io.*
 import kotlin.system.exitProcess
 import org.jdom2.input.SAXBuilder
@@ -24,7 +26,7 @@ class AndroidLayoutFormatter(
     fun formatDocuments(directoryPath: String) {
         try {
             layoutFileProvider.getLayoutFiles(directoryPath).forEach {
-                formatDocument(it.absolutePath)
+                formatLayoutDocument(it.absolutePath)
             }
         } catch (io: Exception) {
             println("An exception occurred while formating the file")
@@ -33,7 +35,7 @@ class AndroidLayoutFormatter(
         }
     }
 
-    private fun formatDocument(filePath: String) {
+    private fun formatLayoutDocument(filePath: String) {
         val doc = SAXBuilder().build(FileInputStream(filePath))
         val outputter =
             XMLOutputter(

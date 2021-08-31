@@ -13,7 +13,7 @@ import org.jdom2.output.support.AbstractXMLOutputProcessor
 @Suppress("UNCHECKED_CAST")
 class AndroidDrawableFormatter(
     private val drawableFileProvider: DrawableFileProvider,
-    private val drawableOutputProcessor: AndroidLayoutOutputProcessor
+    private val drawableOutputProcessor: AndroidDrawableOutputProcessor
 ) : AbstractXMLOutputProcessor() {
 
     fun formatDocuments(rootPath: String) {
@@ -41,6 +41,6 @@ class AndroidDrawableFormatter(
         val stream = ByteArrayOutputStream()
         outputter.output(doc, stream)
         val content = stream.toByteArray()
-        FileOutputStream(filePath).write(content, 0, content.size - 2)
+        FileOutputStream(filePath).write(content, 0, content.size - 1)
     }
 }
