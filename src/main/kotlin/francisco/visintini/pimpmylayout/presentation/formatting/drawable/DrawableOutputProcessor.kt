@@ -72,7 +72,7 @@ class DrawableOutputProcessor(
 
     private fun printElementNamespace(writer: Writer, formatStack: FormatStack, element: Element) {
         with(element) {
-            if (namespace != Namespace.XML_NAMESPACE && namespace.prefix != "aapt" && (namespace != Namespace.NO_NAMESPACE)) {
+            if (namespace != Namespace.XML_NAMESPACE && namespace.prefix != AndroidXmlConstants.ANDROID_AAPT_NS_PREFIX && (namespace != Namespace.NO_NAMESPACE)) {
                 this@DrawableOutputProcessor.printNamespace(writer, formatStack, namespace)
             }
         }

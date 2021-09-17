@@ -1,6 +1,7 @@
 package francisco.visintini.pimpmylayout.presentation.formatting
 
 object AndroidXmlConstants {
+    const val ANDROID_AAPT_NS_PREFIX = "aapt"
     const val EMPTY_SPACE = " "
     const val ELEMENT_CLOSURE_WITHOUT_QUALIFIED_NAME = " />"
     const val QUALIFIED_NAME_OPENING_BEGINNING = "<"
@@ -15,6 +16,4 @@ object AndroidXmlConstants {
     const val AMPERSAND = "&"
     const val COLON = ":"
     const val SEMI_COLON = ";"
-    const val ANDROID_LAYOUT_FOLDER_NAME = "layout"
-    const val ANDROID_DRAWABLE_FOLDER_NAME = "drawable"
 }

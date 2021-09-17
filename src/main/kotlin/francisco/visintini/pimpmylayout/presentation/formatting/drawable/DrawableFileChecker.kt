@@ -8,7 +8,7 @@ import kotlin.io.path.name
 class DrawableFileChecker(private val fileExtensionChecker: FileExtensionChecker) {
 
     private fun isDrawableFolder(folderName: String): Boolean {
-        return LAYOUT_REGULAR_EXPRESSION.toRegex().containsMatchIn(folderName)
+        return DRAWABLE_REGULAR_EXPRESSION.toRegex().containsMatchIn(folderName)
     }
 
     fun isDrawableFile(path: Path) =
@@ -19,6 +19,6 @@ class DrawableFileChecker(private val fileExtensionChecker: FileExtensionChecker
         }
 
     companion object {
-        private const val LAYOUT_REGULAR_EXPRESSION = "drawable.*"
+        private const val DRAWABLE_REGULAR_EXPRESSION = "drawable.*"
     }
 }

@@ -9,13 +9,6 @@ class DrawableAttributeComparator {
 
         checkedAttributes.sortWith { a1, a2 ->
             if (a1.namespacePrefix != a2.namespacePrefix) {
-                DrawableFormattingConfig.NAMESPACE_ORDER.forEach { namespace ->
-                    if (a1.namespacePrefix == namespace) {
-                        return@sortWith -1
-                    } else if (a2.namespacePrefix == namespace) {
-                        return@sortWith 1
-                    }
-                }
                 if (DrawableFormattingConfig.ORDER_NAMESPACES_ALPHABETICALLY) {
                     return@sortWith a1.namespacePrefix.compareTo(a2.namespacePrefix)
                 }

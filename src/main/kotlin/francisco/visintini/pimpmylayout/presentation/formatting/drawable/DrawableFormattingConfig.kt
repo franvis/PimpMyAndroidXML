@@ -24,12 +24,6 @@ internal object DrawableFormattingConfig {
     val INDENT_SPACE = AndroidXmlConstants.EMPTY_SPACE.repeat(ELEMENT_INDENTION)
 
     /**
-     * Provides the order in which we want to organise our attributes namespaces within elements as
-     * an ordered array. "" is meant for attribute that don't have a namespace such as style
-     */
-    val NAMESPACE_ORDER = arrayOf("android", "", "app", "tools")
-
-    /**
      * Provides the order in which we want to organise our attributes names within elements as an
      * ordered array
      */
