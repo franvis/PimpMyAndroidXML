@@ -2,7 +2,6 @@ package francisco.visintini.pimpmylayout.presentation.formatting.layout
 
 import francisco.visintini.pimpmylayout.presentation.extensions.*
 import francisco.visintini.pimpmylayout.presentation.formatting.AndroidXmlConstants
-import francisco.visintini.pimpmylayout.presentation.formatting.AttributeComparator
 import francisco.visintini.pimpmylayout.presentation.formatting.ElementContentAnalyzer
 import java.io.IOException
 import java.io.Writer
@@ -13,8 +12,8 @@ import org.jdom2.output.support.FormatStack
 import org.jdom2.util.NamespaceStack
 
 @Suppress("UNCHECKED_CAST")
-class AndroidLayoutOutputProcessor(
-    private val attributeComparator: AttributeComparator,
+class LayoutOutputProcessor(
+    private val layoutAttributeComparator: LayoutAttributeComparator,
     private val elementContentAnalyzer: ElementContentAnalyzer
 ) : AbstractXMLOutputProcessor() {
 
@@ -75,7 +74,7 @@ class AndroidLayoutOutputProcessor(
     private fun printElementNamespace(writer: Writer, formatStack: FormatStack, element: Element) {
         with(element) {
             if (namespace != Namespace.XML_NAMESPACE && (namespace != Namespace.NO_NAMESPACE)) {
-                this@AndroidLayoutOutputProcessor.printNamespace(writer, formatStack, namespace)
+                this@LayoutOutputProcessor.printNamespace(writer, formatStack, namespace)
             }
         }
     }
@@ -101,10 +100,10 @@ class AndroidLayoutOutputProcessor(
     ) {
         val list = element.additionalNamespaces
         list?.forEach {
-            if (AndroidLayoutFormattingConfig.ATTRIBUTE_INDENTION > 0) {
+            if (LayoutFormattingConfig.ATTRIBUTE_INDENTION > 0) {
                 newline(formatStack, writer)
                 indent(formatStack, writer, element.depth() - 1)
-                writer.write(AndroidLayoutFormattingConfig.INDENT_SPACE)
+                writer.write(LayoutFormattingConfig.INDENT_SPACE)
             } else {
                 writer.write(AndroidXmlConstants.EMPTY_SPACE)
             }
@@ -248,22 +247,18 @@ class AndroidLayoutOutputProcessor(
         repeat(level) { writer.write(formatStack.indent) }
     }
 
-    override fun printAttribute(out: Writer, fstack: FormatStack, attribute: Attribute) {
-        super.printAttribute(out, fstack, attribute)
-    }
-
     private fun printAttributes(
         writer: Writer,
         fstack: FormatStack,
         attribs: List<Attribute>,
         elementDepth: Int
     ) {
-        attributeComparator.sortAttributes(attribs.checkItemsType()).forEach { attrib ->
+        layoutAttributeComparator.sortAttributes(attribs.checkItemsType()).forEach { attrib ->
             // Write indention
-            if (AndroidLayoutFormattingConfig.ATTRIBUTE_INDENTION > 0) {
+            if (LayoutFormattingConfig.ATTRIBUTE_INDENTION > 0) {
                 newline(fstack, writer)
                 indent(fstack, writer, elementDepth - 1)
-                writer.write(AndroidLayoutFormattingConfig.INDENT_SPACE)
+                writer.write(LayoutFormattingConfig.INDENT_SPACE)
             } else {
                 writer.write(AndroidXmlConstants.EMPTY_SPACE)
             }

@@ -1,8 +1,7 @@
 package francisco.visintini.pimpmylayout.presentation.formatting.drawable
 
 import francisco.visintini.pimpmylayout.presentation.formatting.AndroidXmlConstants
-import francisco.visintini.pimpmylayout.presentation.formatting.layout.AndroidLayoutFormattingConfig
-import francisco.visintini.pimpmylayout.presentation.formatting.layout.AndroidLayoutOutputProcessor
+import francisco.visintini.pimpmylayout.presentation.formatting.layout.LayoutFormattingConfig
 import java.io.*
 import kotlin.system.exitProcess
 import org.jdom2.input.SAXBuilder
@@ -11,9 +10,9 @@ import org.jdom2.output.XMLOutputter
 import org.jdom2.output.support.AbstractXMLOutputProcessor
 
 @Suppress("UNCHECKED_CAST")
-class AndroidDrawableFormatter(
+class DrawableFormatter(
     private val drawableFileProvider: DrawableFileProvider,
-    private val drawableOutputProcessor: AndroidDrawableOutputProcessor
+    private val drawableOutputProcessor: DrawableOutputProcessor
 ) : AbstractXMLOutputProcessor() {
 
     fun formatDocuments(rootPath: String) {
@@ -33,7 +32,7 @@ class AndroidDrawableFormatter(
         val outputter =
             XMLOutputter(
                 Format.getPrettyFormat().apply {
-                    indent = AndroidLayoutFormattingConfig.INDENT_SPACE
+                    indent = LayoutFormattingConfig.INDENT_SPACE
                     lineSeparator = AndroidXmlConstants.LINE_BREAK
                     encoding = AndroidXmlConstants.UTF_8
                 },

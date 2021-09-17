@@ -2,9 +2,10 @@ package francisco.visintini.pimpmylayout.presentation.formatting.drawable
 
 import francisco.visintini.pimpmylayout.presentation.extensions.*
 import francisco.visintini.pimpmylayout.presentation.formatting.AndroidXmlConstants
-import francisco.visintini.pimpmylayout.presentation.formatting.AttributeComparator
+import francisco.visintini.pimpmylayout.presentation.formatting.layout.LayoutAttributeComparator
 import francisco.visintini.pimpmylayout.presentation.formatting.ElementContentAnalyzer
-import francisco.visintini.pimpmylayout.presentation.formatting.layout.AndroidLayoutFormattingConfig
+import francisco.visintini.pimpmylayout.presentation.formatting.drawable.DrawableFormattingConfig
+import francisco.visintini.pimpmylayout.presentation.extensions.depth
 import java.io.IOException
 import java.io.Writer
 import org.jdom2.*
@@ -13,8 +14,8 @@ import org.jdom2.output.support.AbstractXMLOutputProcessor
 import org.jdom2.output.support.FormatStack
 import org.jdom2.util.NamespaceStack
 
-class AndroidDrawableOutputProcessor(
-    private val attributeComparator: AttributeComparator,
+class DrawableOutputProcessor(
+    private val DrawableAttributeComparator: DrawableAttributeComparator,
     private val elementContentAnalyzer: ElementContentAnalyzer
 ) : AbstractXMLOutputProcessor() {
 
@@ -71,8 +72,8 @@ class AndroidDrawableOutputProcessor(
 
     private fun printElementNamespace(writer: Writer, formatStack: FormatStack, element: Element) {
         with(element) {
-            if (namespace != Namespace.XML_NAMESPACE && (namespace != Namespace.NO_NAMESPACE)) {
-                this@AndroidDrawableOutputProcessor.printNamespace(writer, formatStack, namespace)
+            if (namespace != Namespace.XML_NAMESPACE && namespace.prefix != "aapt" && (namespace != Namespace.NO_NAMESPACE)) {
+                this@DrawableOutputProcessor.printNamespace(writer, formatStack, namespace)
             }
         }
     }
@@ -98,10 +99,10 @@ class AndroidDrawableOutputProcessor(
     ) {
         val list = element.additionalNamespaces
         list?.forEach {
-            if (AndroidLayoutFormattingConfig.ATTRIBUTE_INDENTION > 0) {
+            if (DrawableFormattingConfig.ATTRIBUTE_INDENTION > 0) {
                 newline(formatStack, writer)
                 indent(formatStack, writer, element.depth() - 1)
-                writer.write(AndroidLayoutFormattingConfig.INDENT_SPACE)
+                writer.write(DrawableFormattingConfig.INDENT_SPACE)
             } else {
                 writer.write(AndroidXmlConstants.EMPTY_SPACE)
             }
@@ -255,12 +256,12 @@ class AndroidDrawableOutputProcessor(
         attribs: List<Attribute>,
         elementDepth: Int
     ) {
-        attributeComparator.sortAttributes(attribs.checkItemsType()).forEach { attrib ->
+        DrawableAttributeComparator.sortAttributes(attribs.checkItemsType()).forEach { attrib ->
             // Write indention
-            if (AndroidLayoutFormattingConfig.ATTRIBUTE_INDENTION > 0) {
+            if (DrawableFormattingConfig.ATTRIBUTE_INDENTION > 0) {
                 newline(fstack, writer)
                 indent(fstack, writer, elementDepth - 1)
-                writer.write(AndroidLayoutFormattingConfig.INDENT_SPACE)
+                writer.write(DrawableFormattingConfig.INDENT_SPACE)
             } else {
                 writer.write(AndroidXmlConstants.EMPTY_SPACE)
             }

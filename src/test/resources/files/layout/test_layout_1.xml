@@ -32,11 +32,11 @@
             android:id="@+id/view_text_image_view_2"
             android:layout_width="48dp"
             android:layout_height="0dp"
+            android:padding="@dimen/test_dimen"
             android:rotation="-90"
             android:src="@drawable/ic_arrow"
-            android:padding="@dimen/test_dimen"
-            app:tint="@color/white"
-            app:layout_constraintTop_toTopOf="@id/view_test_text_view" />
+            app:layout_constraintTop_toTopOf="@id/view_test_text_view"
+            app:tint="@color/white" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

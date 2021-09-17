@@ -1,6 +1,6 @@
 def publishing = [:]
 publishing.group = "francisco.visintini.pimpmylayout"
-publishing.version = "0.2"
+publishing.version = "0.2.1"
 publishing.main_class = "francisco.visintini.pimpmylayout.presentation.MainKt"
 publishing.archive_name = "pimp-my-layout-${publishing.version}.jar"
 publishing.jar_out_directory = "$rootDir/out/pimpMyLayout"

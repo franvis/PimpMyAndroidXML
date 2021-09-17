@@ -1,8 +1,6 @@
 package francisco.visintini.pimpmylayout.presentation.formatting.layout
 
 import francisco.visintini.pimpmylayout.presentation.formatting.AndroidXmlConstants
-import francisco.visintini.pimpmylayout.presentation.formatting.drawable.AndroidDrawableOutputProcessor
-import francisco.visintini.pimpmylayout.presentation.formatting.drawable.DrawableFileProvider
 import java.io.*
 import kotlin.system.exitProcess
 import org.jdom2.input.SAXBuilder
@@ -11,9 +9,9 @@ import org.jdom2.output.XMLOutputter
 import org.jdom2.output.support.AbstractXMLOutputProcessor
 
 @Suppress("UNCHECKED_CAST")
-class AndroidLayoutFormatter(
+class LayoutFormatter(
     private val layoutFileProvider: LayoutFileProvider,
-    private val layoutOutputProcessor: AndroidLayoutOutputProcessor
+    private val layoutOutputProcessor: LayoutOutputProcessor
 ) : AbstractXMLOutputProcessor() {
 
     /**
@@ -40,7 +38,7 @@ class AndroidLayoutFormatter(
         val outputter =
             XMLOutputter(
                 Format.getPrettyFormat().apply {
-                    indent = AndroidLayoutFormattingConfig.INDENT_SPACE
+                    indent = LayoutFormattingConfig.INDENT_SPACE
                     lineSeparator = AndroidXmlConstants.LINE_BREAK
                     encoding = AndroidXmlConstants.UTF_8
                 },

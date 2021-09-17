@@ -3,14 +3,8 @@ package francisco.visintini.pimpmylayout.presentation.apply
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
 import francisco.visintini.pimpmylayout.presentation.formatting.*
-import francisco.visintini.pimpmylayout.presentation.formatting.drawable.AndroidDrawableFormatter
-import francisco.visintini.pimpmylayout.presentation.formatting.drawable.AndroidDrawableOutputProcessor
-import francisco.visintini.pimpmylayout.presentation.formatting.drawable.DrawableFileChecker
-import francisco.visintini.pimpmylayout.presentation.formatting.drawable.DrawableFileProvider
-import francisco.visintini.pimpmylayout.presentation.formatting.layout.AndroidLayoutFormatter
-import francisco.visintini.pimpmylayout.presentation.formatting.layout.AndroidLayoutOutputProcessor
-import francisco.visintini.pimpmylayout.presentation.formatting.layout.LayoutFileChecker
-import francisco.visintini.pimpmylayout.presentation.formatting.layout.LayoutFileProvider
+import francisco.visintini.pimpmylayout.presentation.formatting.drawable.*
+import francisco.visintini.pimpmylayout.presentation.formatting.layout.*
 import java.io.IOException
 
 class PimpMyLayoutApply : CliktCommand() {
@@ -23,12 +17,12 @@ class PimpMyLayoutApply : CliktCommand() {
     override fun run() {
         try {
             AndroidXmlFormatter(
-                AndroidLayoutFormatter(
+                LayoutFormatter(
                     LayoutFileProvider(LayoutFileChecker(FileExtensionChecker())),
-                    AndroidLayoutOutputProcessor(AttributeComparator(), ElementContentAnalyzer())
-                ), AndroidDrawableFormatter(
+                    LayoutOutputProcessor(LayoutAttributeComparator(), ElementContentAnalyzer())
+                ), DrawableFormatter(
                     DrawableFileProvider(DrawableFileChecker(FileExtensionChecker())),
-                    AndroidDrawableOutputProcessor(AttributeComparator(), ElementContentAnalyzer())
+                    DrawableOutputProcessor(DrawableAttributeComparator(), ElementContentAnalyzer())
                 )
             )
                 .formatDocuments(rootPath)

@@ -1,22 +1,21 @@
 package francisco.visintini.pimpmylayout.presentation.formatting
 
-import francisco.visintini.pimpmylayout.presentation.formatting.drawable.AndroidDrawableFormatter
-import francisco.visintini.pimpmylayout.presentation.formatting.layout.AndroidLayoutFormatter
-import java.io.*
+import francisco.visintini.pimpmylayout.presentation.formatting.drawable.DrawableFormatter
+import francisco.visintini.pimpmylayout.presentation.formatting.layout.LayoutFormatter
 import kotlin.system.exitProcess
 import org.jdom2.output.support.AbstractXMLOutputProcessor
 
 @Suppress("UNCHECKED_CAST")
 class AndroidXmlFormatter(
-    private val androidLayoutFormatter: AndroidLayoutFormatter,
-    private val androidDrawableFormatter: AndroidDrawableFormatter
+    private val layoutFormatter: LayoutFormatter,
+    private val drawableFormatter: DrawableFormatter
 ) :
     AbstractXMLOutputProcessor() {
 
     fun formatDocuments(rootPath: String) {
         try {
-            androidLayoutFormatter.formatDocuments(rootPath)
-            androidDrawableFormatter.formatDocuments(rootPath)
+            layoutFormatter.formatDocuments(rootPath)
+            drawableFormatter.formatDocuments(rootPath)
         } catch (io: Exception) {
             println("An exception occurred while formating the file")
             println(io.localizedMessage)
