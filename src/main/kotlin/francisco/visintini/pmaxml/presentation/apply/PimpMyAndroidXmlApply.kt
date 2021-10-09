@@ -7,7 +7,7 @@ import francisco.visintini.pmaxml.presentation.formatting.drawable.*
 import francisco.visintini.pmaxml.presentation.formatting.layout.*
 import java.io.IOException
 
-class PimpMyAndroidXMLApply : CliktCommand() {
+class PimpMyAndroidXmlApply : CliktCommand() {
     private val rootPath: String by argument(
         name = "files to format",
         help =

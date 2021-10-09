@@ -4,7 +4,7 @@ import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
 import java.io.IOException
 
-class PimpMyAndroidXMLCheck : CliktCommand() {
+class PimpMyAndroidXmlCheck : CliktCommand() {
     private val rootPath: String by argument(
         name = "Tag",
         help =
