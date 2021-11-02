@@ -18,13 +18,14 @@ class LayoutOutputProcessor(
 ) : AbstractXMLOutputProcessor() {
 
     override fun printDocument(
-        out: Writer,
+        writer: Writer,
         fstack: FormatStack,
         nstack: NamespaceStack,
         doc: Document
     ) {
-        super.printDocument(out, fstack, nstack, doc)
-        newline(fstack, out)
+        super.printDocument(writer, fstack, nstack, doc)
+        // Write a line at the end of file. In the future we should make it configurable (disable it)
+        writer.writeNewEmptyLine(fstack)
     }
 
     @Throws(IOException::class)
@@ -34,7 +35,9 @@ class LayoutOutputProcessor(
         namespaces: NamespaceStack,
         element: Element
     ) {
+        // Represents the attributes of the current element
         val attributes = element.attributes
+        // Represents the content of the element (within the tags)
         val content = element.content as List<Any>
 
         writer.write(AndroidXmlConstants.QUALIFIED_NAME_OPENING_BEGINNING)
@@ -48,27 +51,45 @@ class LayoutOutputProcessor(
 
         val start = elementContentAnalyzer.getStartOfContentSkippingLeadingWhite(content, 0)
         val size = content.size
+        // Print ending of element
         if (start >= size) {
+            // Write the closure of content elements (TextView, ImageView, etc)
             writer.write(AndroidXmlConstants.ELEMENT_CLOSURE_WITHOUT_QUALIFIED_NAME)
         } else {
+            // Write the closure of group layout elements (LinearLayout, ConstraintLayout, etc)
             writer.write(AndroidXmlConstants.QUALIFIED_NAME_CLOSURE_END)
-            newline(formatStack, writer)
+            writer.writeNewEmptyLine(formatStack)
             if (elementContentAnalyzer.nextNonText(content, start) < size) {
-                newline(formatStack, writer)
+                writer.writeNewEmptyLine(formatStack)
                 printContentRange(
-                    formatStack, writer, content, start, size, element.depth(), namespaces)
-                newline(formatStack, writer)
-                indent(formatStack, writer, element.depth() - 1)
+                    formatStack, writer, content, start, size, element.depth(), namespaces
+                )
+                writer.writeNewEmptyLine(formatStack)
+                writer.writeIndent(formatStack, element.depth() - 1)
             } else {
                 printTextRange(formatStack, writer, content, start, size)
             }
-
             writer.write(AndroidXmlConstants.QUALIFIED_NAME_CLOSURE_BEGINNING)
             printQualifiedName(writer, element)
             writer.write(AndroidXmlConstants.QUALIFIED_NAME_CLOSURE_END)
         }
-
-        newline(formatStack, writer)
+        /**
+         * If the current element is the root element or is not the last element of the parent we add a line break.
+         * This is to avoid having line breaks between closures of elements, for example:
+         * <pre>{@code
+         *     </androidx.constraintlayout.widget.ConstraintLayout>
+         * </androidx.coordinatorlayout.widget.CoordinatorLayout>
+         * }</pre>
+         * instead of
+         * <pre>{@code
+         *     </androidx.constraintlayout.widget.ConstraintLayout>
+         *
+         * </androidx.coordinatorlayout.widget.CoordinatorLayout>
+         * }</pre>
+         */
+        if(element.isRootElement || element.isNotLastElementOfParent()) {
+            writer.writeNewEmptyLine(formatStack)
+        }
     }
 
     private fun printElementNamespace(writer: Writer, formatStack: FormatStack, element: Element) {
@@ -98,17 +119,18 @@ class LayoutOutputProcessor(
         formatStack: FormatStack,
         element: Element
     ) {
-        val list = element.additionalNamespaces
-        list?.forEach {
-            if (LayoutFormattingConfig.ATTRIBUTE_INDENTION > 0) {
-                newline(formatStack, writer)
-                indent(formatStack, writer, element.depth() - 1)
-                writer.write(LayoutFormattingConfig.INDENT_SPACE)
-            } else {
-                writer.write(AndroidXmlConstants.EMPTY_SPACE)
-            }
+        element.additionalNamespaces?.forEach {
+            with(writer) {
+                if (LayoutFormattingConfig.ATTRIBUTE_INDENTION > 0) {
+                    writeNewEmptyLine(formatStack)
+                    writeIndent(formatStack, element.depth() - 1)
+                    write(LayoutFormattingConfig.INDENT_SPACE)
+                } else {
+                    write(AndroidXmlConstants.EMPTY_SPACE)
+                }
 
-            printNamespace(writer, formatStack, it)
+                printNamespace(writer, formatStack, it)
+            }
         }
     }
 
@@ -128,10 +150,10 @@ class LayoutOutputProcessor(
             val next = content[index]
             if (next !is Text && next !is EntityRef) {
                 if (!isFirstNode) {
-                    newline(formatStack, writer)
+                    writer.writeNewEmptyLine(formatStack)
                 }
 
-                indent(formatStack, writer, level)
+                writer.writeIndent(formatStack, level)
                 printNode(formatStack, writer, next, namespaces)
 
                 ++index
@@ -141,10 +163,10 @@ class LayoutOutputProcessor(
                 index = elementContentAnalyzer.nextNonText(content, first)
                 if (first < index) {
                     if (!isFirstNode) {
-                        newline(formatStack, writer)
+                        writer.writeNewEmptyLine(formatStack)
                     }
 
-                    indent(formatStack, writer, level)
+                    writer.writeIndent(formatStack, level)
                     printTextRange(formatStack, writer, content, first, index)
                 }
             }
@@ -154,18 +176,18 @@ class LayoutOutputProcessor(
     private fun printNode(
         formatStack: FormatStack,
         writer: Writer,
-        next: Any,
+        node: Any,
         namespaces: NamespaceStack
     ) {
-        when (next) {
+        when (node) {
             is Comment -> {
-                printComment(writer, formatStack, next)
+                printComment(writer, formatStack, node)
             }
             is Element -> {
-                printElement(writer, formatStack, namespaces, next)
+                printElement(writer, formatStack, namespaces, node)
             }
             is ProcessingInstruction -> {
-                printProcessingInstruction(writer, formatStack, next)
+                printProcessingInstruction(writer, formatStack, node)
             }
         }
     }
@@ -199,7 +221,8 @@ class LayoutOutputProcessor(
         if (actualStart < content.size) {
             val actualEnd =
                 elementContentAnalyzer.getEndOfContentSkippingTrailingWhite(
-                    formatStack.textMode, content, end)
+                    formatStack.textMode, content, end
+                )
             for (i in actualStart..actualEnd) {
                 val node = content[i]
                 val next: String =
@@ -208,8 +231,8 @@ class LayoutOutputProcessor(
                     } else {
                         if (node is EntityRef) {
                             AndroidXmlConstants.AMPERSAND +
-                                node.value +
-                                AndroidXmlConstants.SEMI_COLON
+                                    node.value +
+                                    AndroidXmlConstants.SEMI_COLON
                         } else {
                             throw IllegalStateException("Should see only CDATA, Text, or EntityRef")
                         }
@@ -218,8 +241,9 @@ class LayoutOutputProcessor(
                 if (next.isNotEmpty()) {
                     if (previous != null &&
                         (formatStack.textMode == NORMALIZE || formatStack.textMode == TRIM) &&
-                        (previous.endsWithWhite() || next.startsWithWhite())) {
-                        writer.write(AndroidXmlConstants.EMPTY_SPACE)
+                        (previous.endsWithWhite() || next.startsWithWhite())
+                    ) {
+                        writer.writeEmptySpace()
                     }
 
                     when (node) {
@@ -239,14 +263,6 @@ class LayoutOutputProcessor(
         }
     }
 
-    private fun newline(formatStack: FormatStack, writer: Writer) {
-        writer.write(formatStack.lineSeparator)
-    }
-
-    private fun indent(formatStack: FormatStack, writer: Writer, level: Int) {
-        repeat(level) { writer.write(formatStack.indent) }
-    }
-
     private fun printAttributes(
         writer: Writer,
         fstack: FormatStack,
@@ -254,20 +270,17 @@ class LayoutOutputProcessor(
         elementDepth: Int
     ) {
         layoutAttributeComparator.sortAttributes(attribs.checkItemsType()).forEach { attrib ->
-            // Write indention
-            if (LayoutFormattingConfig.ATTRIBUTE_INDENTION > 0) {
-                newline(fstack, writer)
-                indent(fstack, writer, elementDepth - 1)
-                writer.write(LayoutFormattingConfig.INDENT_SPACE)
-            } else {
-                writer.write(AndroidXmlConstants.EMPTY_SPACE)
+            with(writer) {
+                // Write indention
+                writeNewEmptyLine(fstack)
+                writeIndent(fstack, elementDepth)
+                // Write qualified name
+                printQualifiedName(writer, attrib)
+                // Write attribute value
+                write(AndroidXmlConstants.BEGINNING_OF_VALUE)
+                attributeEscapedEntitiesFilter(writer, fstack, attrib.value)
+                write(AndroidXmlConstants.END_OF_VALUE)
             }
-            // Write qualified name
-            printQualifiedName(writer, attrib)
-            // Write attribute
-            writer.write(AndroidXmlConstants.BEGINNING_OF_VALUE)
-            attributeEscapedEntitiesFilter(writer, fstack, attrib.value)
-            writer.write(AndroidXmlConstants.END_OF_VALUE)
         }
     }
 

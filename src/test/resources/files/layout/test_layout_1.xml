@@ -37,7 +37,5 @@
             android:src="@drawable/ic_arrow"
             app:layout_constraintTop_toTopOf="@id/view_test_text_view"
             app:tint="@color/white" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

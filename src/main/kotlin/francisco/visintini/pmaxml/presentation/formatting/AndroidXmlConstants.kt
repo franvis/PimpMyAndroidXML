@@ -1,5 +1,7 @@
 package francisco.visintini.pmaxml.presentation.formatting
 
+import org.jdom2.Namespace
+
 object AndroidXmlConstants {
     const val ANDROID_AAPT_NS_PREFIX = "aapt"
     const val EMPTY_SPACE = " "
@@ -16,4 +18,5 @@ object AndroidXmlConstants {
     const val AMPERSAND = "&"
     const val COLON = ":"
     const val SEMI_COLON = ";"
+    val androidNamespace: Namespace = Namespace.getNamespace("android","http://schemas.android.com/apk/res/android")
 }

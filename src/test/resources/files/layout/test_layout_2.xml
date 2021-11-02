@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorBackground"
+    android:orientation="vertical">
+
+    <sample.pimpmyandroidxml.SampleView
+        android:id="@+id/view_sample_view_1"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/toolbar_height"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/view_nested_scroll_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_store_detail_toolbar">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/view_image_view_1"
+                android:layout_width="0dp"
+                android:layout_height="120dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@tools:sample/backgrounds/scenic" />
+
+            <sample.pimpmyandroidxml.SampleView2
+                android:id="@+id/view_sample_view_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/gap_3"
+                android:text="@string/store_coolblue_xxl"
+                app:layout_constraintBottom_toBottomOf="@id/view_store_detail_image"
+                app:layout_constraintStart_toStartOf="@id/screen_margin_start" />
+
+            <TextView
+                android:id="@+id/view_text_view_1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/gap_3"
+                android:textIsSelectable="false"
+                style="@style/H3"
+                app:layout_constraintEnd_toEndOf="@id/screen_margin_end"
+                app:layout_constraintStart_toStartOf="@id/screen_margin_start"
+                app:layout_constraintTop_toBottomOf="@id/view_store_detail_image"
+                tools:text="The Hague" />
+
+            <TextView
+                android:id="@+id/view_text_view_2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textIsSelectable="true"
+                style="@style/Body"
+                app:layout_constraintEnd_toStartOf="@id/view_store_detail_distance"
+                app:layout_constraintStart_toStartOf="@id/screen_margin_start"
+                app:layout_constraintTop_toBottomOf="@id/view_store_detail_name"
+                tools:text="Anna van Buerenplein 7\n2595 DA Den Haag" />
+
+            <sample.pimpmyandroidxml.SampleView3
+                android:id="@+id/view_sample_view_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/gap_2"
+                android:textIsSelectable="false"
+                app:icon_with_text_icon="@drawable/ic_pin"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="@id/view_store_detail_address"
+                app:layout_constraintEnd_toEndOf="@id/screen_margin_end"
+                tools:drawableStart="@drawable/ic_pin"
+                tools:text="45 km" />
+
+            <sample.pimpmyandroidxml.SampleView4
+                android:id="@+id/view_sample_view_4"
+                android:layout_width="0dp"
+                android:layout_height="200dp"
+                android:layout_marginTop="@dimen/gap_4"
+                app:layout_constraintEnd_toEndOf="@id/screen_margin_end"
+                app:layout_constraintStart_toStartOf="@id/screen_margin_start"
+                map:layout_constraintTop_toBottomOf="@id/view_store_detail_address" />
+
+            <sample.pimpmyandroidxml.SampleView2
+                android:id="@+id/view_sample_view_5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/gap_1"
+                android:paddingBottom="@dimen/gap_3"
+                app:atom_cta_link_text="@string/store_detail_plan_your_route"
+                app:layout_constraintEnd_toEndOf="@id/screen_margin_end"
+                app:layout_constraintStart_toStartOf="@id/screen_margin_start"
+                app:layout_constraintTop_toBottomOf="@id/view_store_map" />
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/view_sample_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="view_store_detail_accessibility_title,view_store_detail_accessibility_public_transport_icon,view_store_detail_accessibility_public_transport_text,view_store_detail_accessibility_car_icon,view_store_detail_accessibility_car_text" />
+
+            <TextView
+                android:id="@+id/view_text_view_3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/store_detail_accessibility"
+                android:textIsSelectable="false"
+                style="@style/H3"
+                app:layout_constraintEnd_toEndOf="@id/screen_margin_end"
+                app:layout_constraintStart_toStartOf="@id/screen_margin_start"
+                app:layout_constraintTop_toBottomOf="@id/view_store_detail_link_plan_route" />
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/view_sample_group_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="view_store_detail_accessibility_public_transport_icon,view_store_detail_accessibility_public_transport_text" />
+
+            <ImageView
+                android:id="@+id/view_image_view_2"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:baseline="16dp"
+                android:layout_marginBottom="@dimen/gap_2"
+                android:layout_marginTop="@dimen/gap_1"
+                android:src="@drawable/ic_bus"
+                app:layout_constraintStart_toStartOf="@id/screen_margin_start"
+                app:layout_constraintTop_toBottomOf="@id/view_store_detail_accessibility_title" />
+
+            <TextView
+                android:id="@+id/view_text_view_4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/gap_2"
+                android:layout_marginStart="@dimen/gap_2"
+                android:textIsSelectable="true"
+                style="@style/Body"
+                app:layout_constraintBaseline_toBaselineOf="@id/view_store_detail_accessibility_public_transport_icon"
+                app:layout_constraintEnd_toEndOf="@id/screen_margin_end"
+                app:layout_constraintStart_toEndOf="@id/view_store_detail_accessibility_public_transport_icon"
+                tools:text="Our store is a 6-minute walk from train station Amsterdam Zuid." />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/view_sample_barrier"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:baseline="18dp"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="view_store_detail_accessibility_public_transport_text,view_store_detail_accessibility_public_transport_icon" />
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/view_sample_group_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="view_store_detail_accessibility_car_icon,view_store_detail_accessibility_car_text" />
+
+            <ImageView
+                android:id="@+id/view_image_view_3"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:baseline="16dp"
+                android:layout_marginBottom="@dimen/gap_2"
+                android:layout_marginTop="@dimen/gap_1"
+                android:src="@drawable/ic_car"
+                app:layout_constraintStart_toStartOf="@id/screen_margin_start"
+                app:layout_constraintTop_toBottomOf="@id/barrier_bottom_public_transport" />
+
+            <TextView
+                android:id="@+id/view_text_view_5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/gap_2"
+                android:layout_marginStart="@dimen/gap_2"
+                android:textIsSelectable="true"
+                style="@style/Body"
+                app:layout_constraintBaseline_toBaselineOf="@id/view_store_detail_accessibility_car_icon"
+                app:layout_constraintEnd_toEndOf="@id/screen_margin_end"
+                app:layout_constraintStart_toEndOf="@id/view_store_detail_accessibility_car_icon"
+                tools:text="There are a few paid parking spots in front of the store, which cost € 4 per hour. Do you use a parking app? The number of the parking meter is 18585. \n\nTip: on the Boelelaan, you only have to pay € 1.40 per hour. The walk is only a few minutes longer.\n\nThe Qpark Mahler parking garage is around the corner on Aaron Coplandstraat 8, which costs € 2 per 15 minutes." />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/view_sample_barrier_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="view_store_detail_accessibility_car_text,view_store_detail_accessibility_car_icon" />
+
+            <View
+                android:id="@+id/view_sample_view_6"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/item_decoration_divider_height"
+                android:background="?attr/colorBorder"
+                android:layout_marginTop="@dimen/gap_3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/barrier_bottom_car" />
+
+            <TextView
+                android:id="@+id/view_text_view_6"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/gap_3"
+                android:text="@string/store_detail_opening_hours"
+                android:textIsSelectable="false"
+                style="@style/H3"
+                app:layout_constraintEnd_toEndOf="@id/screen_margin_end"
+                app:layout_constraintStart_toStartOf="@id/screen_margin_start"
+                app:layout_constraintTop_toBottomOf="@id/view_store_detail_accessibility_bottom_separator" />
+
+            <include
+                android:id="@+id/view_sample_include"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/gap_1"
+                layout="@layout/merge_store_opening_hours"
+                app:layout_constraintEnd_toEndOf="@id/screen_margin_end"
+                app:layout_constraintStart_toStartOf="@id/screen_margin_start"
+                app:layout_constraintTop_toBottomOf="@id/view_store_detail_opening_hours_title" />
+
+            <View
+                android:id="@+id/view_sample_view_7"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/item_decoration_divider_height"
+                android:background="?attr/colorBorder"
+                android:layout_marginTop="@dimen/gap_3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/merge_store_opening_hours" />
+
+            <TextView
+                android:id="@+id/view_text_view_7"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/gap_3"
+                android:text="@string/store_detail_in_store_service"
+                android:textIsSelectable="false"
+                style="@style/H3"
+                app:layout_constraintEnd_toEndOf="@id/screen_margin_end"
+                app:layout_constraintStart_toStartOf="@id/screen_margin_start"
+                app:layout_constraintTop_toBottomOf="@id/view_store_detail_opening_hours_bottom_separator" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/view_sample_recycler_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                app:layout_constraintEnd_toEndOf="@id/screen_margin_end"
+                app:layout_constraintStart_toStartOf="@id/screen_margin_start"
+                app:layout_constraintTop_toBottomOf="@id/view_store_detail_in_store_service_title" />
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/view_sample_group_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="view_store_detail_in_store_service_title,view_store_detail_in_store_service_content" />
+
+            <TextView
+                android:id="@+id/view_text_view_8"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/gap_3"
+                android:text="@string/store_detail_anticipation"
+                android:textIsSelectable="false"
+                style="@style/H3"
+                app:layout_constraintEnd_toEndOf="@id/screen_margin_end"
+                app:layout_constraintStart_toStartOf="@id/screen_margin_start"
+                app:layout_constraintTop_toBottomOf="@id/view_store_detail_in_store_service_content" />
+
+            <ImageView
+                android:id="@+id/view_image_view_4"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:baseline="16dp"
+                android:src="@drawable/ic_360"
+                app:layout_constraintStart_toStartOf="@id/screen_margin_start"
+                app:layout_constraintTop_toBottomOf="@id/view_store_detail_anticipation_title" />
+
+            <TextView
+                android:id="@+id/view_text_view_9"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/gap_2"
+                android:text="@string/store_detail_anticipation_text"
+                android:textIsSelectable="false"
+                style="@style/Body"
+                app:layout_constraintBaseline_toBaselineOf="@id/view_store_detail_anticipation_icon"
+                app:layout_constraintEnd_toEndOf="@id/screen_margin_end"
+                app:layout_constraintStart_toEndOf="@id/view_store_detail_anticipation_icon" />
+
+            <sample.pimpmyandroidxml.SampleView
+                android:id="@+id/view_sample_view_8"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/gap_3"
+                app:atom_cta_link_text="@string/store_detail_anticipation_link"
+                app:layout_constraintEnd_toEndOf="@id/screen_margin_end"
+                app:layout_constraintStart_toStartOf="@id/view_store_detail_anticipation_text"
+                app:layout_constraintTop_toBottomOf="@id/view_store_detail_anticipation_text" />
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/view_sample_group_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="view_store_detail_anticipation_icon,view_store_detail_anticipation_text,view_store_detail_anticipation_link,view_store_detail_anticipation_title" />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/view_sample_barrier_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierAllowsGoneWidgets="false"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="view_store_detail_anticipation_link,view_store_detail_in_store_service_content" />
+
+            <View
+                android:id="@+id/view_sample_view_9"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/item_decoration_divider_height"
+                android:background="?attr/colorBorder"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_store_barrier_service_block" />
+
+            <ImageView
+                android:id="@+id/view_image_view_5"
+                android:layout_width="90dp"
+                android:layout_height="134dp"
+                android:layout_marginTop="@dimen/gap_1"
+                android:src="@drawable/customer_service_guy"
+                app:layout_constraintEnd_toEndOf="@id/screen_margin_end"
+                app:layout_constraintTop_toTopOf="@id/view_store_detail_anticipation_bottom_separator" />
+
+            <TextView
+                android:id="@+id/view_text_view_10"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/gap_3"
+                android:text="@string/store_detail_customer_service"
+                android:textIsSelectable="false"
+                style="@style/H3"
+                app:layout_constraintEnd_toStartOf="@id/view_store_detail_customer_service_image"
+                app:layout_constraintStart_toStartOf="@id/screen_margin_start"
+                app:layout_constraintTop_toBottomOf="@id/view_store_detail_anticipation_bottom_separator" />
+
+            <TextView
+                android:id="@+id/view_text_view_11"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textIsSelectable="false"
+                style="@style/Body"
+                app:layout_constraintEnd_toStartOf="@id/view_store_detail_customer_service_image"
+                app:layout_constraintStart_toStartOf="@id/screen_margin_start"
+                app:layout_constraintTop_toBottomOf="@id/view_store_detail_customer_service_title"
+                tools:text="Contact our customer service." />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/view_sample_guideline_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="@dimen/gap_4" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/view_sample_guideline_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="@dimen/gap_4" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <sample.pimpmyandroidxml.SampleLoaderView
+        android:id="@+id/view_sample_loader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_store_detail_toolbar" />
+</androidx.constraintlayout.widget.ConstraintLayout>
