@@ -1,6 +1,6 @@
 def publishing = [:]
 publishing.group = "francisco.visintini.pimpmyandroidxml"
-publishing.version = "0.2.2"
+publishing.version = "0.3.0-dev1"
 publishing.main_class = "francisco.visintini.pimpmyandroidxml.presentation.MainKt"
 publishing.archive_name = "pimp-my-android-xml-${publishing.version}.jar"
 publishing.jar_out_directory = "$rootDir/out/pimpMyAndroidXML"
@@ -12,6 +12,8 @@ versions.clikt = "3.2.0"
 versions.ktfmt = "0.25"
 versions.jvm_target = "1.8"
 versions.jdom = "2.0.6"
+versions.apache_commons = "3.12.0"
+versions.dagger = "2.40.1"
 ext.versions = versions
 
 def deps = [:]
@@ -24,7 +26,13 @@ deps.kotlin = kotlin
 deps.clikt = "com.github.ajalt.clikt:clikt:$versions.clikt"
 // JDOM
 deps.jdom = "org.jdom:jdom2:$versions.jdom"
+// Apache
+deps.apache_commons_lang3 = "org.apache.commons:commons-lang3:$versions.apache_commons"
 // Testing
 def testing = [:]
 deps.testing = testing
+def dagger = [:]
+dagger.dagger = "com.google.dagger:dagger:$versions.dagger"
+dagger.compiler = "com.google.dagger:dagger-compiler:$versions.dagger"
+deps.dagger = dagger
 ext.deps = deps

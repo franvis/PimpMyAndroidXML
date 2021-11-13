@@ -33,7 +33,11 @@ dependencies {
     implementation deps.clikt
     // JDOM
     implementation deps.jdom
-    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    // Apache
+    implementation deps.apache_commons_lang3
+    // Dagger
+    implementation deps.dagger.dagger
+    annotationProcessor deps.dagger.compiler
 }
 
 jar {
