@@ -10,8 +10,9 @@ import kotlin.io.path.isDirectory
 import kotlin.io.path.name
 import kotlin.streams.toList
 
-class LayoutFileManagerImpl @Inject constructor(private val fileExtensionChecker: FileExtensionChecker) :
-    LayoutFileManager {
+class LayoutFileManagerImpl
+@Inject
+constructor(private val fileExtensionChecker: FileExtensionChecker) : LayoutFileManager {
 
     override fun getLayoutFiles(rootDirectory: Path): List<File> {
         if (isLayoutDirectory(rootDirectory)) {

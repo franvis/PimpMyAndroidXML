@@ -10,8 +10,9 @@ import kotlin.io.path.isDirectory
 import kotlin.io.path.name
 import kotlin.streams.toList
 
-class DrawableFileManagerImpl @Inject constructor(private val fileExtensionChecker: FileExtensionChecker) :
-    DrawableFileManager {
+class DrawableFileManagerImpl
+@Inject
+constructor(private val fileExtensionChecker: FileExtensionChecker) : DrawableFileManager {
 
     override fun getDrawableFiles(rootDirectory: Path): List<File> {
         if (isDrawableDirectory(rootDirectory)) {
@@ -24,10 +25,16 @@ class DrawableFileManagerImpl @Inject constructor(private val fileExtensionCheck
     }
 
     private fun isDrawableDirectory(directory: Path) =
-        with(directory) { isDirectory() && DRAWABLE_REGULAR_EXPRESSION.toRegex().containsMatchIn(name) }
+        with(directory) {
+            isDirectory() && DRAWABLE_REGULAR_EXPRESSION.toRegex().containsMatchIn(name)
+        }
 
     private fun isDrawableFile(path: Path) =
-        with(path) { parent != null && isDrawableDirectory(parent) && fileExtensionChecker.isXmlFile(extension) }
+        with(path) {
+            parent != null &&
+                isDrawableDirectory(parent) &&
+                fileExtensionChecker.isXmlFile(extension)
+        }
 
     private companion object {
         private const val DRAWABLE_REGULAR_EXPRESSION = "drawable.*"

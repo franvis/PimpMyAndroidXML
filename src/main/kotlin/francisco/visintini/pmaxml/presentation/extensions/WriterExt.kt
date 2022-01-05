@@ -1,8 +1,8 @@
 package francisco.visintini.pmaxml.presentation.extensions
 
 import francisco.visintini.pmaxml.presentation.formatting.utils.AndroidXmlConstants.EMPTY_SPACE
-import org.jdom2.output.support.FormatStack
 import java.io.Writer
+import org.jdom2.output.support.FormatStack
 
 fun Writer.writeNewEmptyLine(formatStack: FormatStack) {
     write(formatStack.lineSeparator)

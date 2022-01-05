@@ -6,12 +6,13 @@ import francisco.visintini.pmaxml.presentation.formatting.*
 import java.io.IOException
 import javax.inject.Inject
 
-class PimpMyAndroidXmlApply @Inject constructor(private val allDocumentsFormatter: AllDocumentsFormatter) : CliktCommand() {
+class PimpMyAndroidXmlApply
+@Inject
+constructor(private val allDocumentsFormatter: AllDocumentsFormatter) : CliktCommand() {
     private val rootPath: String by argument(
         name = "files to format",
         help =
-        "The absolute path of the root directory where to start looking at for files to apply the code styling "
-    )
+            "The absolute path of the root directory where to start looking at for files to apply the code styling ")
 
     override fun run() {
         try {

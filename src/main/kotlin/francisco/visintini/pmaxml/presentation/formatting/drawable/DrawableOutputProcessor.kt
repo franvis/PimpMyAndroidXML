@@ -1,19 +1,21 @@
 package francisco.visintini.pmaxml.presentation.formatting.drawable
 
 import francisco.visintini.pmaxml.presentation.extensions.*
-import francisco.visintini.pmaxml.presentation.formatting.utils.AndroidXmlConstants
-import francisco.visintini.pmaxml.presentation.formatting.jdom.ElementContentAnalyzer
 import francisco.visintini.pmaxml.presentation.extensions.depth
+import francisco.visintini.pmaxml.presentation.formatting.jdom.ElementContentAnalyzer
+import francisco.visintini.pmaxml.presentation.formatting.utils.AndroidXmlConstants
 import java.io.IOException
 import java.io.Writer
+import javax.inject.Inject
 import org.jdom2.*
 import org.jdom2.output.Format.TextMode.*
 import org.jdom2.output.support.AbstractXMLOutputProcessor
 import org.jdom2.output.support.FormatStack
 import org.jdom2.util.NamespaceStack
-import javax.inject.Inject
 
-class DrawableOutputProcessor @Inject constructor(
+class DrawableOutputProcessor
+@Inject
+constructor(
     private val DrawableAttributeComparator: DrawableAttributeComparator,
     private val elementContentAnalyzer: ElementContentAnalyzer
 ) : AbstractXMLOutputProcessor() {
@@ -71,7 +73,9 @@ class DrawableOutputProcessor @Inject constructor(
 
     private fun printElementNamespace(writer: Writer, formatStack: FormatStack, element: Element) {
         with(element) {
-            if (namespace != Namespace.XML_NAMESPACE && namespace.prefix != AndroidXmlConstants.ANDROID_AAPT_NS_PREFIX && (namespace != Namespace.NO_NAMESPACE)) {
+            if (namespace != Namespace.XML_NAMESPACE &&
+                namespace.prefix != AndroidXmlConstants.ANDROID_AAPT_NS_PREFIX &&
+                (namespace != Namespace.NO_NAMESPACE)) {
                 this@DrawableOutputProcessor.printNamespace(writer, formatStack, namespace)
             }
         }

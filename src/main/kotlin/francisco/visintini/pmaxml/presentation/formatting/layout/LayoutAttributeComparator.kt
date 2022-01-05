@@ -1,7 +1,7 @@
 package francisco.visintini.pmaxml.presentation.formatting.layout
 
-import org.jdom2.Attribute
 import javax.inject.Inject
+import org.jdom2.Attribute
 
 class LayoutAttributeComparator @Inject constructor() {
 

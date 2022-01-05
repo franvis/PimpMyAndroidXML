@@ -1,19 +1,21 @@
 package francisco.visintini.pmaxml.presentation.formatting.layout
 
 import francisco.visintini.pmaxml.presentation.extensions.*
-import francisco.visintini.pmaxml.presentation.formatting.utils.AndroidXmlConstants
 import francisco.visintini.pmaxml.presentation.formatting.jdom.ElementContentAnalyzer
+import francisco.visintini.pmaxml.presentation.formatting.utils.AndroidXmlConstants
 import java.io.IOException
 import java.io.Writer
+import javax.inject.Inject
 import org.jdom2.*
 import org.jdom2.output.Format.TextMode.*
 import org.jdom2.output.support.AbstractXMLOutputProcessor
 import org.jdom2.output.support.FormatStack
 import org.jdom2.util.NamespaceStack
-import javax.inject.Inject
 
 @Suppress("UNCHECKED_CAST")
-class LayoutOutputProcessor @Inject constructor(
+class LayoutOutputProcessor
+@Inject
+constructor(
     private val layoutAttributeComparator: LayoutAttributeComparator,
     private val elementContentAnalyzer: ElementContentAnalyzer
 ) : AbstractXMLOutputProcessor() {
@@ -25,7 +27,8 @@ class LayoutOutputProcessor @Inject constructor(
         doc: Document
     ) {
         super.printDocument(writer, fstack, nstack, doc)
-        // Write a line at the end of file. In the future we should make it configurable (disable it)
+        // Write a line at the end of file. In the future we should make it configurable (disable
+        // it)
         writer.writeNewEmptyLine(fstack)
     }
 
@@ -63,8 +66,7 @@ class LayoutOutputProcessor @Inject constructor(
             if (elementContentAnalyzer.nextNonText(content, start) < size) {
                 writer.writeNewEmptyLine(formatStack)
                 printContentRange(
-                    formatStack, writer, content, start, size, element.depth(), namespaces
-                )
+                    formatStack, writer, content, start, size, element.depth(), namespaces)
                 writer.writeNewEmptyLine(formatStack)
                 writer.writeIndent(formatStack, element.depth() - 1)
             } else {
@@ -75,20 +77,19 @@ class LayoutOutputProcessor @Inject constructor(
             writer.write(AndroidXmlConstants.QUALIFIED_NAME_CLOSURE_END)
         }
         /**
-         * If the current element is the root element or is not the last element of the parent we add a line break.
-         * This is to avoid having line breaks between closures of elements, for example:
-         * <pre>{@code
+         * If the current element is the root element or is not the last element of the parent we
+         * add a line break. This is to avoid having line breaks between closures of elements, for
+         * example: <pre>{@code
+         * ```
          *     </androidx.constraintlayout.widget.ConstraintLayout>
-         * </androidx.coordinatorlayout.widget.CoordinatorLayout>
-         * }</pre>
-         * instead of
-         * <pre>{@code
+         * ```
+         * </androidx.coordinatorlayout.widget.CoordinatorLayout> }</pre> instead of <pre>{@code
+         * ```
          *     </androidx.constraintlayout.widget.ConstraintLayout>
-         *
-         * </androidx.coordinatorlayout.widget.CoordinatorLayout>
-         * }</pre>
+         * ```
+         * </androidx.coordinatorlayout.widget.CoordinatorLayout> }</pre>
          */
-        if(element.isRootElement || element.isNotLastElementOfParent()) {
+        if (element.isRootElement || element.isNotLastElementOfParent()) {
             writer.writeNewEmptyLine(formatStack)
         }
     }
@@ -222,8 +223,7 @@ class LayoutOutputProcessor @Inject constructor(
         if (actualStart < content.size) {
             val actualEnd =
                 elementContentAnalyzer.getEndOfContentSkippingTrailingWhite(
-                    formatStack.textMode, content, end
-                )
+                    formatStack.textMode, content, end)
             for (i in actualStart..actualEnd) {
                 val node = content[i]
                 val next: String =
@@ -232,8 +232,8 @@ class LayoutOutputProcessor @Inject constructor(
                     } else {
                         if (node is EntityRef) {
                             AndroidXmlConstants.AMPERSAND +
-                                    node.value +
-                                    AndroidXmlConstants.SEMI_COLON
+                                node.value +
+                                AndroidXmlConstants.SEMI_COLON
                         } else {
                             throw IllegalStateException("Should see only CDATA, Text, or EntityRef")
                         }
@@ -242,8 +242,7 @@ class LayoutOutputProcessor @Inject constructor(
                 if (next.isNotEmpty()) {
                     if (previous != null &&
                         (formatStack.textMode == NORMALIZE || formatStack.textMode == TRIM) &&
-                        (previous.endsWithWhite() || next.startsWithWhite())
-                    ) {
+                        (previous.endsWithWhite() || next.startsWithWhite())) {
                         writer.writeEmptySpace()
                     }
 

@@ -10,8 +10,12 @@ import francisco.visintini.pmaxml.presentation.formatting.layout.*
 abstract class FormattingModule {
 
     @Binds
-    abstract fun bindDrawableFileManager(drawableFileManagerImpl: DrawableFileManagerImpl): DrawableFileManager
+    abstract fun bindDrawableFileManager(
+        drawableFileManagerImpl: DrawableFileManagerImpl
+    ): DrawableFileManager
 
     @Binds
-    abstract fun bindLayoutFileManager(layoutFileManagerImpl: LayoutFileManagerImpl): LayoutFileManager
+    abstract fun bindLayoutFileManager(
+        layoutFileManagerImpl: LayoutFileManagerImpl
+    ): LayoutFileManager
 }

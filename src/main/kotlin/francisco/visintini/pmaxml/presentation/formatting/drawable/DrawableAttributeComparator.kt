@@ -1,7 +1,7 @@
 package francisco.visintini.pmaxml.presentation.formatting.drawable
 
-import org.jdom2.Attribute
 import javax.inject.Inject
+import org.jdom2.Attribute
 
 class DrawableAttributeComparator @Inject constructor() {
 

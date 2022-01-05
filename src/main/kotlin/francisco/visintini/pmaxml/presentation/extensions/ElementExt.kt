@@ -15,9 +15,14 @@ fun Element.depth(): Int {
 
 fun Element.isLastElementOfParent(): Boolean {
     return parentElement?.let {
-        parentElement.children.filterIsInstance<Element>().last()
-            .getAttributeValue("id", androidNamespace) == this.getAttributeValue("id", androidNamespace)
-    } ?: false
+        parentElement
+            .children
+            .filterIsInstance<Element>()
+            .last()
+            .getAttributeValue("id", androidNamespace) ==
+            this.getAttributeValue("id", androidNamespace)
+    }
+        ?: false
 }
 
 fun Element.isNotLastElementOfParent(): Boolean = isLastElementOfParent().not()

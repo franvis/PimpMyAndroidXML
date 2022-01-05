@@ -11,7 +11,9 @@ fun main(args: Array<String>) {
     DaggerPimpMyAndroidXml.builder().build().createMain().main(args)
 }
 
-class Main @Inject constructor(
+class Main
+@Inject
+constructor(
     pimpMyAndroidXmlCheck: PimpMyAndroidXmlCheck,
     pimpMyAndroidXmlApply: PimpMyAndroidXmlApply
 ) : NoOpCliktCommand() {

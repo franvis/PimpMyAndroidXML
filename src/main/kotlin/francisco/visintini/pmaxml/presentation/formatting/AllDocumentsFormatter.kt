@@ -4,15 +4,16 @@ import francisco.visintini.pmaxml.presentation.formatting.drawable.DrawableFileM
 import francisco.visintini.pmaxml.presentation.formatting.drawable.DrawableFormatter
 import francisco.visintini.pmaxml.presentation.formatting.layout.LayoutFileManager
 import francisco.visintini.pmaxml.presentation.formatting.layout.LayoutFormatter
-import kotlin.system.exitProcess
-import org.jdom2.output.support.AbstractXMLOutputProcessor
 import java.nio.file.Files
 import java.nio.file.Path
 import javax.inject.Inject
 import kotlin.io.path.isDirectory
+import kotlin.system.exitProcess
 
 @Suppress("UNCHECKED_CAST")
-class AllDocumentsFormatter @Inject constructor(
+class AllDocumentsFormatter
+@Inject
+constructor(
     private val layoutFormatter: LayoutFormatter,
     private val drawableFormatter: DrawableFormatter,
     private val layoutFileManager: LayoutFileManager,

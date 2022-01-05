@@ -1,10 +1,10 @@
 package francisco.visintini.pmaxml.presentation.formatting.jdom
 
 import francisco.visintini.pmaxml.presentation.extensions.*
+import javax.inject.Inject
 import org.jdom2.EntityRef
 import org.jdom2.Text
 import org.jdom2.output.Format
-import javax.inject.Inject
 
 class ElementContentAnalyzer @Inject constructor() {
 

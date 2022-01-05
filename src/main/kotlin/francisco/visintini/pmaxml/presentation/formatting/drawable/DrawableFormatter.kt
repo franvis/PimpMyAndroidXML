@@ -1,19 +1,19 @@
 package francisco.visintini.pmaxml.presentation.formatting.drawable
 
-import francisco.visintini.pmaxml.presentation.formatting.utils.AndroidXmlConstants
 import francisco.visintini.pmaxml.presentation.formatting.FileFormatter
 import francisco.visintini.pmaxml.presentation.formatting.layout.LayoutFormattingConfig
+import francisco.visintini.pmaxml.presentation.formatting.utils.AndroidXmlConstants
 import java.io.*
+import javax.inject.Inject
 import kotlin.system.exitProcess
 import org.jdom2.input.SAXBuilder
 import org.jdom2.output.Format
 import org.jdom2.output.XMLOutputter
-import javax.inject.Inject
 
 @Suppress("UNCHECKED_CAST")
-class DrawableFormatter @Inject constructor(
-    private val drawableOutputProcessor: DrawableOutputProcessor
-) : FileFormatter() {
+class DrawableFormatter
+@Inject
+constructor(private val drawableOutputProcessor: DrawableOutputProcessor) : FileFormatter() {
 
     override fun formatFiles(files: List<File>) {
         try {
