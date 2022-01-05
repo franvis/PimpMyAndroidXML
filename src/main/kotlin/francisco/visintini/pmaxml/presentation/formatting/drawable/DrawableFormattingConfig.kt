@@ -1,6 +1,6 @@
 package francisco.visintini.pmaxml.presentation.formatting.drawable
 
-import francisco.visintini.pmaxml.presentation.formatting.AndroidXmlConstants
+import francisco.visintini.pmaxml.presentation.formatting.utils.AndroidXmlConstants
 
 internal object DrawableFormattingConfig {
     /**

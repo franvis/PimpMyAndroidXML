@@ -1,8 +1,9 @@
 package francisco.visintini.pmaxml.presentation.formatting.drawable
 
 import org.jdom2.Attribute
+import javax.inject.Inject
 
-class DrawableAttributeComparator {
+class DrawableAttributeComparator @Inject constructor() {
 
     fun sortAttributes(attributes: List<Attribute>): List<Attribute> {
         val checkedAttributes = attributes.toMutableList()

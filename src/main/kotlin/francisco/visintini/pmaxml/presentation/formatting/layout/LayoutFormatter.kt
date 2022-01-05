@@ -1,31 +1,22 @@
 package francisco.visintini.pmaxml.presentation.formatting.layout
 
-import francisco.visintini.pmaxml.presentation.formatting.AndroidXmlConstants
+import francisco.visintini.pmaxml.presentation.formatting.utils.AndroidXmlConstants
+import francisco.visintini.pmaxml.presentation.formatting.FileFormatter
 import java.io.*
 import kotlin.system.exitProcess
 import org.jdom2.input.SAXBuilder
 import org.jdom2.output.Format
 import org.jdom2.output.XMLOutputter
-import org.jdom2.output.support.AbstractXMLOutputProcessor
+import javax.inject.Inject
 
 @Suppress("UNCHECKED_CAST")
-class LayoutFormatter(
-    private val layoutFileProvider: LayoutFileProvider,
+class LayoutFormatter @Inject constructor(
     private val layoutOutputProcessor: LayoutOutputProcessor
-) : AbstractXMLOutputProcessor() {
+) : FileFormatter() {
 
-    /**
-     * Formats all layout xml documents within a directory. If no directory named 'layout' is found
-     * when navigating recursively the directoryPath parameter, no file will be formatted.
-     *
-     * @param directoryPath root directory where the examination and search for documents to be
-     * formatted will start.
-     */
-    fun formatDocuments(directoryPath: String) {
+    override fun formatFiles(files: List<File>) {
         try {
-            layoutFileProvider.getLayoutFiles(directoryPath).forEach {
-                formatLayoutDocument(it.absolutePath)
-            }
+            files.forEach { format(it.absolutePath) }
         } catch (io: Exception) {
             println("An exception occurred while formating the file")
             println(io.localizedMessage)
@@ -33,7 +24,7 @@ class LayoutFormatter(
         }
     }
 
-    private fun formatLayoutDocument(filePath: String) {
+    private fun format(filePath: String) {
         val doc = SAXBuilder().build(FileInputStream(filePath))
         val outputter =
             XMLOutputter(

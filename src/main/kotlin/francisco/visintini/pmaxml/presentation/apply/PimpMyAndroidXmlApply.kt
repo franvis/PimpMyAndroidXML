@@ -3,11 +3,10 @@ package francisco.visintini.pmaxml.presentation.apply
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
 import francisco.visintini.pmaxml.presentation.formatting.*
-import francisco.visintini.pmaxml.presentation.formatting.drawable.*
-import francisco.visintini.pmaxml.presentation.formatting.layout.*
 import java.io.IOException
+import javax.inject.Inject
 
-class PimpMyAndroidXmlApply : CliktCommand() {
+class PimpMyAndroidXmlApply @Inject constructor(private val allDocumentsFormatter: AllDocumentsFormatter) : CliktCommand() {
     private val rootPath: String by argument(
         name = "files to format",
         help =
@@ -16,16 +15,7 @@ class PimpMyAndroidXmlApply : CliktCommand() {
 
     override fun run() {
         try {
-            AndroidXmlFormatter(
-                LayoutFormatter(
-                    LayoutFileProvider(LayoutFileChecker(FileExtensionChecker())),
-                    LayoutOutputProcessor(LayoutAttributeComparator(), ElementContentAnalyzer())
-                ), DrawableFormatter(
-                    DrawableFileProvider(DrawableFileChecker(FileExtensionChecker())),
-                    DrawableOutputProcessor(DrawableAttributeComparator(), ElementContentAnalyzer())
-                )
-            )
-                .formatDocuments(rootPath)
+            allDocumentsFormatter.formatAllDocuments(rootPath)
         } catch (e: IOException) {
             e.printStackTrace()
         }

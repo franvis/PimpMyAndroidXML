@@ -1,8 +1,8 @@
 package francisco.visintini.pmaxml.presentation.formatting.layout
 
 import francisco.visintini.pmaxml.presentation.extensions.*
-import francisco.visintini.pmaxml.presentation.formatting.AndroidXmlConstants
-import francisco.visintini.pmaxml.presentation.formatting.ElementContentAnalyzer
+import francisco.visintini.pmaxml.presentation.formatting.utils.AndroidXmlConstants
+import francisco.visintini.pmaxml.presentation.formatting.jdom.ElementContentAnalyzer
 import java.io.IOException
 import java.io.Writer
 import org.jdom2.*
@@ -10,9 +10,10 @@ import org.jdom2.output.Format.TextMode.*
 import org.jdom2.output.support.AbstractXMLOutputProcessor
 import org.jdom2.output.support.FormatStack
 import org.jdom2.util.NamespaceStack
+import javax.inject.Inject
 
 @Suppress("UNCHECKED_CAST")
-class LayoutOutputProcessor(
+class LayoutOutputProcessor @Inject constructor(
     private val layoutAttributeComparator: LayoutAttributeComparator,
     private val elementContentAnalyzer: ElementContentAnalyzer
 ) : AbstractXMLOutputProcessor() {

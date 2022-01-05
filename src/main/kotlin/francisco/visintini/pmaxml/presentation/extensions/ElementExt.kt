@@ -1,8 +1,7 @@
 package francisco.visintini.pmaxml.presentation.extensions
 
-import francisco.visintini.pmaxml.presentation.formatting.AndroidXmlConstants.androidNamespace
+import francisco.visintini.pmaxml.presentation.formatting.utils.AndroidXmlConstants.androidNamespace
 import org.jdom2.Element
-import org.jdom2.Namespace
 
 fun Element.depth(): Int {
     var depth = 0

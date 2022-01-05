@@ -1,8 +1,8 @@
 package francisco.visintini.pmaxml.presentation.formatting.drawable
 
 import francisco.visintini.pmaxml.presentation.extensions.*
-import francisco.visintini.pmaxml.presentation.formatting.AndroidXmlConstants
-import francisco.visintini.pmaxml.presentation.formatting.ElementContentAnalyzer
+import francisco.visintini.pmaxml.presentation.formatting.utils.AndroidXmlConstants
+import francisco.visintini.pmaxml.presentation.formatting.jdom.ElementContentAnalyzer
 import francisco.visintini.pmaxml.presentation.extensions.depth
 import java.io.IOException
 import java.io.Writer
@@ -11,8 +11,9 @@ import org.jdom2.output.Format.TextMode.*
 import org.jdom2.output.support.AbstractXMLOutputProcessor
 import org.jdom2.output.support.FormatStack
 import org.jdom2.util.NamespaceStack
+import javax.inject.Inject
 
-class DrawableOutputProcessor(
+class DrawableOutputProcessor @Inject constructor(
     private val DrawableAttributeComparator: DrawableAttributeComparator,
     private val elementContentAnalyzer: ElementContentAnalyzer
 ) : AbstractXMLOutputProcessor() {

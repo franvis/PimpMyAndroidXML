@@ -37,7 +37,7 @@ dependencies {
     implementation deps.apache_commons_lang3
     // Dagger
     implementation deps.dagger.dagger
-    annotationProcessor deps.dagger.compiler
+    kapt deps.dagger.compiler
 }
 
 jar {

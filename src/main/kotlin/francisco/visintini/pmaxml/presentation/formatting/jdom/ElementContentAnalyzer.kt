@@ -1,11 +1,12 @@
-package francisco.visintini.pmaxml.presentation.formatting
+package francisco.visintini.pmaxml.presentation.formatting.jdom
 
 import francisco.visintini.pmaxml.presentation.extensions.*
 import org.jdom2.EntityRef
 import org.jdom2.Text
 import org.jdom2.output.Format
+import javax.inject.Inject
 
-class ElementContentAnalyzer {
+class ElementContentAnalyzer @Inject constructor() {
 
     fun getEndOfContentSkippingTrailingWhite(
         textMode: Format.TextMode,

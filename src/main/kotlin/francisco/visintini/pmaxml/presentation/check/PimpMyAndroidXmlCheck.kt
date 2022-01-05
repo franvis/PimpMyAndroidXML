@@ -3,8 +3,9 @@ package francisco.visintini.pmaxml.presentation.check
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
 import java.io.IOException
+import javax.inject.Inject
 
-class PimpMyAndroidXmlCheck : CliktCommand() {
+class PimpMyAndroidXmlCheck @Inject constructor() : CliktCommand() {
     private val rootPath: String by argument(
         name = "Tag",
         help =

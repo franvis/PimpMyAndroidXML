@@ -1,25 +1,23 @@
 package francisco.visintini.pmaxml.presentation.formatting.drawable
 
-import francisco.visintini.pmaxml.presentation.formatting.AndroidXmlConstants
+import francisco.visintini.pmaxml.presentation.formatting.utils.AndroidXmlConstants
+import francisco.visintini.pmaxml.presentation.formatting.FileFormatter
 import francisco.visintini.pmaxml.presentation.formatting.layout.LayoutFormattingConfig
 import java.io.*
 import kotlin.system.exitProcess
 import org.jdom2.input.SAXBuilder
 import org.jdom2.output.Format
 import org.jdom2.output.XMLOutputter
-import org.jdom2.output.support.AbstractXMLOutputProcessor
+import javax.inject.Inject
 
 @Suppress("UNCHECKED_CAST")
-class DrawableFormatter(
-    private val drawableFileProvider: DrawableFileProvider,
+class DrawableFormatter @Inject constructor(
     private val drawableOutputProcessor: DrawableOutputProcessor
-) : AbstractXMLOutputProcessor() {
+) : FileFormatter() {
 
-    fun formatDocuments(rootPath: String) {
+    override fun formatFiles(files: List<File>) {
         try {
-            drawableFileProvider.getDrawableFiles(rootPath).forEach {
-                formatDocument(it.absolutePath)
-            }
+            files.forEach { formatDocument(it.absolutePath) }
         } catch (io: Exception) {
             println("An exception occurred while formating the file")
             println(io.localizedMessage)

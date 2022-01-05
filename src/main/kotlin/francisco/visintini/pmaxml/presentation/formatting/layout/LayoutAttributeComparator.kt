@@ -1,8 +1,9 @@
 package francisco.visintini.pmaxml.presentation.formatting.layout
 
 import org.jdom2.Attribute
+import javax.inject.Inject
 
-class LayoutAttributeComparator {
+class LayoutAttributeComparator @Inject constructor() {
 
     fun sortAttributes(attributes: List<Attribute>): List<Attribute> {
         val checkedAttributes = attributes.toMutableList()

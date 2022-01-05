@@ -1,6 +1,8 @@
-package francisco.visintini.pmaxml.presentation.formatting
+package francisco.visintini.pmaxml.presentation.formatting.utils
 
-class FileExtensionChecker {
+import javax.inject.Inject
+
+class FileExtensionChecker @Inject constructor() {
 
     fun isXmlFile(fileExtension: String) = fileExtension == XML_FILE_EXTENSION
 

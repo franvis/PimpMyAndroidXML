@@ -1,7 +1,6 @@
 package francisco.visintini.pmaxml.presentation.extensions
 
-import francisco.visintini.pmaxml.presentation.formatting.AndroidXmlConstants
-import francisco.visintini.pmaxml.presentation.formatting.AndroidXmlConstants.EMPTY_SPACE
+import francisco.visintini.pmaxml.presentation.formatting.utils.AndroidXmlConstants.EMPTY_SPACE
 import org.jdom2.output.support.FormatStack
 import java.io.Writer
 
