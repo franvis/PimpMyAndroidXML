@@ -2,7 +2,7 @@ package francisco.visintini.pmaxml.presentation.apply
 
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
-import francisco.visintini.pmaxml.presentation.formatting.*
+import francisco.visintini.pmaxml.presentation.apply.formatting.*
 import java.io.IOException
 import javax.inject.Inject
 

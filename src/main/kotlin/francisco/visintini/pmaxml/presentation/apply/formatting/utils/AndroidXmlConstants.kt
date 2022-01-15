@@ -1,4 +1,4 @@
-package francisco.visintini.pmaxml.presentation.formatting.utils
+package francisco.visintini.pmaxml.presentation.apply.formatting.utils
 
 import org.jdom2.Namespace
 

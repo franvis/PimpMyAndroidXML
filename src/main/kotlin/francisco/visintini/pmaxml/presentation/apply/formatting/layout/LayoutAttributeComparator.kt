@@ -1,4 +1,4 @@
-package francisco.visintini.pmaxml.presentation.formatting.layout
+package francisco.visintini.pmaxml.presentation.apply.formatting.layout
 
 import javax.inject.Inject
 import org.jdom2.Attribute

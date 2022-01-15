@@ -1,8 +1,8 @@
-package francisco.visintini.pmaxml.presentation.formatting.drawable
+package francisco.visintini.pmaxml.presentation.apply.formatting.drawable
 
-import francisco.visintini.pmaxml.presentation.formatting.FileFormatter
-import francisco.visintini.pmaxml.presentation.formatting.layout.LayoutFormattingConfig
-import francisco.visintini.pmaxml.presentation.formatting.utils.AndroidXmlConstants
+import francisco.visintini.pmaxml.presentation.apply.formatting.FileFormatter
+import francisco.visintini.pmaxml.presentation.apply.formatting.layout.LayoutFormattingConfig
+import francisco.visintini.pmaxml.presentation.apply.formatting.utils.AndroidXmlConstants
 import java.io.*
 import javax.inject.Inject
 import kotlin.system.exitProcess
@@ -20,7 +20,7 @@ constructor(private val drawableOutputProcessor: DrawableOutputProcessor) : File
             files.forEach { formatDocument(it.absolutePath) }
         } catch (io: Exception) {
             println("An exception occurred while formating the file")
-            println(io.localizedMessage)
+            io.printStackTrace()
             exitProcess(1)
         }
     }

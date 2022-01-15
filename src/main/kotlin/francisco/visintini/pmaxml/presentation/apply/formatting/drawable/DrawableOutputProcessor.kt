@@ -1,8 +1,9 @@
-package francisco.visintini.pmaxml.presentation.formatting.layout
+package francisco.visintini.pmaxml.presentation.apply.formatting.drawable
 
+import francisco.visintini.pmaxml.presentation.apply.formatting.jdom.ElementContentAnalyzer
+import francisco.visintini.pmaxml.presentation.apply.formatting.utils.AndroidXmlConstants
 import francisco.visintini.pmaxml.presentation.extensions.*
-import francisco.visintini.pmaxml.presentation.formatting.jdom.ElementContentAnalyzer
-import francisco.visintini.pmaxml.presentation.formatting.utils.AndroidXmlConstants
+import francisco.visintini.pmaxml.presentation.extensions.depth
 import java.io.IOException
 import java.io.Writer
 import javax.inject.Inject
@@ -12,24 +13,21 @@ import org.jdom2.output.support.AbstractXMLOutputProcessor
 import org.jdom2.output.support.FormatStack
 import org.jdom2.util.NamespaceStack
 
-@Suppress("UNCHECKED_CAST")
-class LayoutOutputProcessor
+class DrawableOutputProcessor
 @Inject
 constructor(
-    private val layoutAttributeComparator: LayoutAttributeComparator,
+    private val DrawableAttributeComparator: DrawableAttributeComparator,
     private val elementContentAnalyzer: ElementContentAnalyzer
 ) : AbstractXMLOutputProcessor() {
 
     override fun printDocument(
-        writer: Writer,
+        out: Writer,
         fstack: FormatStack,
         nstack: NamespaceStack,
         doc: Document
     ) {
-        super.printDocument(writer, fstack, nstack, doc)
-        // Write a line at the end of file. In the future we should make it configurable (disable
-        // it)
-        writer.writeNewEmptyLine(fstack)
+        super.printDocument(out, fstack, nstack, doc)
+        newline(fstack, out)
     }
 
     @Throws(IOException::class)
@@ -39,9 +37,7 @@ constructor(
         namespaces: NamespaceStack,
         element: Element
     ) {
-        // Represents the attributes of the current element
         val attributes = element.attributes
-        // Represents the content of the element (within the tags)
         val content = element.content as List<Any>
 
         writer.write(AndroidXmlConstants.QUALIFIED_NAME_OPENING_BEGINNING)
@@ -55,49 +51,32 @@ constructor(
 
         val start = elementContentAnalyzer.getStartOfContentSkippingLeadingWhite(content, 0)
         val size = content.size
-        // Print ending of element
         if (start >= size) {
-            // Write the closure of content elements (TextView, ImageView, etc)
             writer.write(AndroidXmlConstants.ELEMENT_CLOSURE_WITHOUT_QUALIFIED_NAME)
         } else {
-            // Write the closure of group layout elements (LinearLayout, ConstraintLayout, etc)
             writer.write(AndroidXmlConstants.QUALIFIED_NAME_CLOSURE_END)
-            writer.writeNewEmptyLine(formatStack)
             if (elementContentAnalyzer.nextNonText(content, start) < size) {
-                writer.writeNewEmptyLine(formatStack)
+                newline(formatStack, writer)
                 printContentRange(
                     formatStack, writer, content, start, size, element.depth(), namespaces)
-                writer.writeNewEmptyLine(formatStack)
-                writer.writeIndent(formatStack, element.depth() - 1)
+                newline(formatStack, writer)
+                indent(formatStack, writer, element.depth() - 1)
             } else {
                 printTextRange(formatStack, writer, content, start, size)
             }
+
             writer.write(AndroidXmlConstants.QUALIFIED_NAME_CLOSURE_BEGINNING)
             printQualifiedName(writer, element)
             writer.write(AndroidXmlConstants.QUALIFIED_NAME_CLOSURE_END)
-        }
-        /**
-         * If the current element is the root element or is not the last element of the parent we
-         * add a line break. This is to avoid having line breaks between closures of elements, for
-         * example: <pre>{@code
-         * ```
-         *     </androidx.constraintlayout.widget.ConstraintLayout>
-         * ```
-         * </androidx.coordinatorlayout.widget.CoordinatorLayout> }</pre> instead of <pre>{@code
-         * ```
-         *     </androidx.constraintlayout.widget.ConstraintLayout>
-         * ```
-         * </androidx.coordinatorlayout.widget.CoordinatorLayout> }</pre>
-         */
-        if (element.isRootElement || element.isNotLastElementOfParent()) {
-            writer.writeNewEmptyLine(formatStack)
         }
     }
 
     private fun printElementNamespace(writer: Writer, formatStack: FormatStack, element: Element) {
         with(element) {
-            if (namespace != Namespace.XML_NAMESPACE && (namespace != Namespace.NO_NAMESPACE)) {
-                this@LayoutOutputProcessor.printNamespace(writer, formatStack, namespace)
+            if (namespace != Namespace.XML_NAMESPACE &&
+                namespace.prefix != AndroidXmlConstants.ANDROID_AAPT_NS_PREFIX &&
+                (namespace != Namespace.NO_NAMESPACE)) {
+                this@DrawableOutputProcessor.printNamespace(writer, formatStack, namespace)
             }
         }
     }
@@ -121,18 +100,17 @@ constructor(
         formatStack: FormatStack,
         element: Element
     ) {
-        element.additionalNamespaces?.forEach {
-            with(writer) {
-                if (LayoutFormattingConfig.ATTRIBUTE_INDENTION > 0) {
-                    writeNewEmptyLine(formatStack)
-                    writeIndent(formatStack, element.depth() - 1)
-                    write(LayoutFormattingConfig.INDENT_SPACE)
-                } else {
-                    write(AndroidXmlConstants.EMPTY_SPACE)
-                }
-
-                printNamespace(writer, formatStack, it)
+        val list = element.additionalNamespaces
+        list?.forEach {
+            if (DrawableFormattingConfig.ATTRIBUTE_INDENTION > 0) {
+                newline(formatStack, writer)
+                indent(formatStack, writer, element.depth() - 1)
+                writer.write(DrawableFormattingConfig.INDENT_SPACE)
+            } else {
+                writer.write(AndroidXmlConstants.EMPTY_SPACE)
             }
+
+            printNamespace(writer, formatStack, it)
         }
     }
 
@@ -152,10 +130,10 @@ constructor(
             val next = content[index]
             if (next !is Text && next !is EntityRef) {
                 if (!isFirstNode) {
-                    writer.writeNewEmptyLine(formatStack)
+                    newline(formatStack, writer)
                 }
 
-                writer.writeIndent(formatStack, level)
+                indent(formatStack, writer, level)
                 printNode(formatStack, writer, next, namespaces)
 
                 ++index
@@ -165,10 +143,10 @@ constructor(
                 index = elementContentAnalyzer.nextNonText(content, first)
                 if (first < index) {
                     if (!isFirstNode) {
-                        writer.writeNewEmptyLine(formatStack)
+                        newline(formatStack, writer)
                     }
 
-                    writer.writeIndent(formatStack, level)
+                    indent(formatStack, writer, level)
                     printTextRange(formatStack, writer, content, first, index)
                 }
             }
@@ -178,18 +156,18 @@ constructor(
     private fun printNode(
         formatStack: FormatStack,
         writer: Writer,
-        node: Any,
+        next: Any,
         namespaces: NamespaceStack
     ) {
-        when (node) {
+        when (next) {
             is Comment -> {
-                printComment(writer, formatStack, node)
+                printComment(writer, formatStack, next)
             }
             is Element -> {
-                printElement(writer, formatStack, namespaces, node)
+                printElement(writer, formatStack, namespaces, next)
             }
             is ProcessingInstruction -> {
-                printProcessingInstruction(writer, formatStack, node)
+                printProcessingInstruction(writer, formatStack, next)
             }
         }
     }
@@ -212,20 +190,20 @@ constructor(
     private fun printTextRange(
         formatStack: FormatStack,
         writer: Writer,
-        content: List<Any>,
+        elementContentItems: List<Any>,
         start: Int,
         end: Int
     ) {
         var previous: String? = null
         val actualStart =
-            elementContentAnalyzer.getStartOfContentSkippingLeadingWhite(content, start)
+            elementContentAnalyzer.getStartOfContentSkippingLeadingWhite(elementContentItems, start)
 
-        if (actualStart < content.size) {
+        if (actualStart < elementContentItems.size) {
             val actualEnd =
                 elementContentAnalyzer.getEndOfContentSkippingTrailingWhite(
-                    formatStack.textMode, content, end)
+                    elementContentItems, end)
             for (i in actualStart..actualEnd) {
-                val node = content[i]
+                val node = elementContentItems[i]
                 val next: String =
                     if (node is Text) {
                         node.text
@@ -243,7 +221,7 @@ constructor(
                     if (previous != null &&
                         (formatStack.textMode == NORMALIZE || formatStack.textMode == TRIM) &&
                         (previous.endsWithWhite() || next.startsWithWhite())) {
-                        writer.writeEmptySpace()
+                        writer.write(AndroidXmlConstants.EMPTY_SPACE)
                     }
 
                     when (node) {
@@ -263,24 +241,39 @@ constructor(
         }
     }
 
+    private fun newline(formatStack: FormatStack, writer: Writer) {
+        writer.write(formatStack.lineSeparator)
+    }
+
+    private fun indent(formatStack: FormatStack, writer: Writer, level: Int) {
+        repeat(level) { writer.write(formatStack.indent) }
+    }
+
+    override fun printAttribute(out: Writer, fstack: FormatStack, attribute: Attribute) {
+        super.printAttribute(out, fstack, attribute)
+    }
+
     private fun printAttributes(
         writer: Writer,
         fstack: FormatStack,
         attribs: List<Attribute>,
         elementDepth: Int
     ) {
-        layoutAttributeComparator.sortAttributes(attribs.checkItemsType()).forEach { attrib ->
-            with(writer) {
-                // Write indention
-                writeNewEmptyLine(fstack)
-                writeIndent(fstack, elementDepth)
-                // Write qualified name
-                printQualifiedName(writer, attrib)
-                // Write attribute value
-                write(AndroidXmlConstants.BEGINNING_OF_VALUE)
-                attributeEscapedEntitiesFilter(writer, fstack, attrib.value)
-                write(AndroidXmlConstants.END_OF_VALUE)
+        DrawableAttributeComparator.sortAttributes(attribs.checkItemsType()).forEach { attrib ->
+            // Write indention
+            if (DrawableFormattingConfig.ATTRIBUTE_INDENTION > 0) {
+                newline(fstack, writer)
+                indent(fstack, writer, elementDepth - 1)
+                writer.write(DrawableFormattingConfig.INDENT_SPACE)
+            } else {
+                writer.write(AndroidXmlConstants.EMPTY_SPACE)
             }
+            // Write qualified name
+            printQualifiedName(writer, attrib)
+            // Write attribute
+            writer.write(AndroidXmlConstants.BEGINNING_OF_VALUE)
+            attributeEscapedEntitiesFilter(writer, fstack, attrib.value)
+            writer.write(AndroidXmlConstants.END_OF_VALUE)
         }
     }
 

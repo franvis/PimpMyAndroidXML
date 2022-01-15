@@ -1,6 +1,6 @@
 package francisco.visintini.pmaxml.presentation.extensions
 
-import francisco.visintini.pmaxml.presentation.formatting.utils.AndroidXmlConstants.EMPTY_SPACE
+import francisco.visintini.pmaxml.presentation.apply.formatting.utils.AndroidXmlConstants.EMPTY_SPACE
 import java.io.Writer
 import org.jdom2.output.support.FormatStack
 
@@ -20,6 +20,7 @@ fun Writer.writeIndent(customIndentSize: Int, level: Int = 1) {
     repeat(level) { write(EMPTY_SPACE.repeat(customIndentSize)) }
 }
 
+/** Writes an [EMPTY_SPACE] */
 fun Writer.writeEmptySpace() {
     write(EMPTY_SPACE)
 }

@@ -1,6 +1,6 @@
-package francisco.visintini.pmaxml.presentation.formatting.drawable
+package francisco.visintini.pmaxml.presentation.apply.formatting.drawable
 
-import francisco.visintini.pmaxml.presentation.formatting.utils.FileExtensionChecker
+import francisco.visintini.pmaxml.presentation.apply.formatting.utils.FileExtensionChecker
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path

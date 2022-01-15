@@ -1,9 +1,9 @@
-package francisco.visintini.pmaxml.presentation.formatting
+package francisco.visintini.pmaxml.presentation.apply.formatting
 
-import francisco.visintini.pmaxml.presentation.formatting.drawable.DrawableFileManager
-import francisco.visintini.pmaxml.presentation.formatting.drawable.DrawableFormatter
-import francisco.visintini.pmaxml.presentation.formatting.layout.LayoutFileManager
-import francisco.visintini.pmaxml.presentation.formatting.layout.LayoutFormatter
+import francisco.visintini.pmaxml.presentation.apply.formatting.drawable.DrawableFileManager
+import francisco.visintini.pmaxml.presentation.apply.formatting.drawable.DrawableFormatter
+import francisco.visintini.pmaxml.presentation.apply.formatting.layout.LayoutFileManager
+import francisco.visintini.pmaxml.presentation.apply.formatting.layout.LayoutFormatter
 import java.nio.file.Files
 import java.nio.file.Path
 import javax.inject.Inject
@@ -30,7 +30,7 @@ constructor(
             }
         } catch (io: Exception) {
             println("An exception occurred while formating the file")
-            println(io.localizedMessage)
+            io.printStackTrace()
             exitProcess(1)
         }
     }

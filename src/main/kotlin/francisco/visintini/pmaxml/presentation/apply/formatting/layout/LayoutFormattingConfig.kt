@@ -1,6 +1,6 @@
-package francisco.visintini.pmaxml.presentation.formatting.layout
+package francisco.visintini.pmaxml.presentation.apply.formatting.layout
 
-import francisco.visintini.pmaxml.presentation.formatting.utils.AndroidXmlConstants
+import francisco.visintini.pmaxml.presentation.apply.formatting.utils.AndroidXmlConstants
 
 internal object LayoutFormattingConfig {
     /**

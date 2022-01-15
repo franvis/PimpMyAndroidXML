@@ -1,10 +1,9 @@
-package francisco.visintini.pmaxml.presentation.formatting.layout
+package francisco.visintini.pmaxml.presentation.apply.formatting.layout
 
-import francisco.visintini.pmaxml.presentation.formatting.FileFormatter
-import francisco.visintini.pmaxml.presentation.formatting.utils.AndroidXmlConstants
+import francisco.visintini.pmaxml.presentation.apply.formatting.FileFormatter
+import francisco.visintini.pmaxml.presentation.apply.formatting.utils.AndroidXmlConstants
 import java.io.*
 import javax.inject.Inject
-import kotlin.system.exitProcess
 import org.jdom2.input.SAXBuilder
 import org.jdom2.output.Format
 import org.jdom2.output.XMLOutputter
@@ -15,13 +14,7 @@ class LayoutFormatter
 constructor(private val layoutOutputProcessor: LayoutOutputProcessor) : FileFormatter() {
 
     override fun formatFiles(files: List<File>) {
-        try {
-            files.forEach { format(it.absolutePath) }
-        } catch (io: Exception) {
-            println("An exception occurred while formating the file")
-            println(io.localizedMessage)
-            exitProcess(1)
-        }
+        files.forEach { format(it.absolutePath) }
     }
 
     private fun format(filePath: String) {
