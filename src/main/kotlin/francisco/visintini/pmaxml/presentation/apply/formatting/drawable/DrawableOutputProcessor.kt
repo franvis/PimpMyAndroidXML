@@ -40,10 +40,9 @@ constructor(
         val attributes = element.attributes
         val content = element.content as List<Any>
 
-        writer.write(AndroidXmlConstants.QUALIFIED_NAME_OPENING_BEGINNING)
+        writer.write(AndroidXmlConstants.OPENING_TAG_BEGINNING)
         printQualifiedName(writer, element)
 
-        printElementNamespace(writer, formatStack, element)
         printAdditionalNamespaces(writer, formatStack, element)
         if (attributes.isNotNullNorEmpty()) {
             printAttributes(writer, formatStack, attributes, element.depth())
@@ -52,9 +51,9 @@ constructor(
         val start = elementContentAnalyzer.getStartOfContentSkippingLeadingWhite(content, 0)
         val size = content.size
         if (start >= size) {
-            writer.write(AndroidXmlConstants.ELEMENT_CLOSURE_WITHOUT_QUALIFIED_NAME)
+            writer.write(AndroidXmlConstants.OPENING_TAG_WITHOUT_CHILDREN_CLOSURE)
         } else {
-            writer.write(AndroidXmlConstants.QUALIFIED_NAME_CLOSURE_END)
+            writer.write(AndroidXmlConstants.CLOSING_TAG_CLOSURE)
             if (elementContentAnalyzer.nextNonText(content, start) < size) {
                 newline(formatStack, writer)
                 printContentRange(
@@ -65,19 +64,9 @@ constructor(
                 printTextRange(formatStack, writer, content, start, size)
             }
 
-            writer.write(AndroidXmlConstants.QUALIFIED_NAME_CLOSURE_BEGINNING)
+            writer.write(AndroidXmlConstants.CLOSING_TAG_BEGINNING)
             printQualifiedName(writer, element)
-            writer.write(AndroidXmlConstants.QUALIFIED_NAME_CLOSURE_END)
-        }
-    }
-
-    private fun printElementNamespace(writer: Writer, formatStack: FormatStack, element: Element) {
-        with(element) {
-            if (namespace != Namespace.XML_NAMESPACE &&
-                namespace.prefix != AndroidXmlConstants.ANDROID_AAPT_NS_PREFIX &&
-                (namespace != Namespace.NO_NAMESPACE)) {
-                this@DrawableOutputProcessor.printNamespace(writer, formatStack, namespace)
-            }
+            writer.write(AndroidXmlConstants.CLOSING_TAG_CLOSURE)
         }
     }
 

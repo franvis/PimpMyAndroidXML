@@ -5,7 +5,6 @@ import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 import javax.inject.Inject
-import kotlin.io.path.extension
 import kotlin.io.path.isDirectory
 import kotlin.io.path.name
 import kotlin.streams.toList
@@ -15,16 +14,12 @@ class LayoutFileManagerImpl
 constructor(private val fileExtensionChecker: FileExtensionChecker) : LayoutFileManager {
 
     override fun getLayoutFiles(rootDirectory: Path): List<File> {
-        if (isLayoutDirectory(rootDirectory)) {
-            Files.walk(rootDirectory).use { paths ->
-                return paths.filter { isLayoutFile(it) }.map { it.toFile() }.toList()
-            }
-        } else {
-            return emptyList()
+        Files.walk(rootDirectory).use { paths ->
+            return paths.filter { isLayoutFile(it) }.map { it.toFile() }.toList()
         }
     }
 
-    private fun isLayoutDirectory(directory: Path): Boolean {
+    override fun isLayoutDirectory(directory: Path): Boolean {
         return with(directory) {
             isDirectory() && LAYOUT_REGULAR_EXPRESSION.toRegex().containsMatchIn(name)
         }
@@ -32,7 +27,7 @@ constructor(private val fileExtensionChecker: FileExtensionChecker) : LayoutFile
 
     private fun isLayoutFile(path: Path) =
         with(path) {
-            parent != null && isLayoutDirectory(parent) && fileExtensionChecker.isXmlFile(extension)
+            parent != null && isLayoutDirectory(parent) && fileExtensionChecker.isXmlFile(path)
         }
 
     private companion object {

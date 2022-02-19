@@ -2,6 +2,7 @@ package francisco.visintini.pmaxml.presentation.apply.formatting.layout
 
 import francisco.visintini.pmaxml.presentation.apply.formatting.utils.AndroidXmlConstants
 
+// TODO Make this attributes optional
 internal object LayoutFormattingConfig {
     /**
      * Specifies the space indention for an attribute within an element. Should be always bigger

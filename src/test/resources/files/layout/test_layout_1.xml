@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Comment at the start of document-->
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -27,6 +28,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Test text" />
+        <!--Comment in the middle-->
+        <!--Followed by a new one-->
 
         <ImageView
             android:id="@+id/view_text_image_view_2"
@@ -37,5 +40,7 @@
             android:src="@drawable/ic_arrow"
             app:layout_constraintTop_toTopOf="@id/view_test_text_view"
             app:tint="@color/white" />
+        <!-- Comment at the end of parent container-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
+<!-- Comment at the end of document-->

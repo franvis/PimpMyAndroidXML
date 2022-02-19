@@ -6,4 +6,6 @@ import java.nio.file.Path
 interface DrawableFileManager {
 
     fun getDrawableFiles(rootDirectory: Path): List<File>
+
+    fun isDrawableDirectory(directory: Path): Boolean
 }

@@ -5,7 +5,6 @@ import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 import javax.inject.Inject
-import kotlin.io.path.extension
 import kotlin.io.path.isDirectory
 import kotlin.io.path.name
 import kotlin.streams.toList
@@ -14,26 +13,20 @@ class DrawableFileManagerImpl
 @Inject
 constructor(private val fileExtensionChecker: FileExtensionChecker) : DrawableFileManager {
 
-    override fun getDrawableFiles(rootDirectory: Path): List<File> {
-        if (isDrawableDirectory(rootDirectory)) {
-            Files.walk(rootDirectory).use { paths ->
-                return paths.filter { isDrawableFile(it) }.map { it.toFile() }.toList()
-            }
-        } else {
-            return emptyList()
+    override fun getDrawableFiles(drawableDirectory: Path): List<File> {
+        Files.walk(drawableDirectory).use { paths ->
+            return paths.filter { isDrawableFile(it) }.map { it.toFile() }.toList()
         }
     }
 
-    private fun isDrawableDirectory(directory: Path) =
+    override fun isDrawableDirectory(directory: Path) =
         with(directory) {
             isDirectory() && DRAWABLE_REGULAR_EXPRESSION.toRegex().containsMatchIn(name)
         }
 
     private fun isDrawableFile(path: Path) =
         with(path) {
-            parent != null &&
-                isDrawableDirectory(parent) &&
-                fileExtensionChecker.isXmlFile(extension)
+            parent != null && isDrawableDirectory(parent) && fileExtensionChecker.isXmlFile(path)
         }
 
     private companion object {

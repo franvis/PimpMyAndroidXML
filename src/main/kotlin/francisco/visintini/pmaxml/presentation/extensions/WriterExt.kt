@@ -4,11 +4,15 @@ import francisco.visintini.pmaxml.presentation.apply.formatting.utils.AndroidXml
 import java.io.Writer
 import org.jdom2.output.support.FormatStack
 
-fun Writer.writeNewEmptyLine(formatStack: FormatStack) {
+fun Writer.writeLineBreak(formatStack: FormatStack) {
     write(formatStack.lineSeparator)
 }
 
-fun Writer.writeNewEmptyLine(formatStack: FormatStack, quantity: Int) {
+fun Writer.writeEmptyLine(formatStack: FormatStack) {
+    writeLineBreak(formatStack, 2)
+}
+
+fun Writer.writeLineBreak(formatStack: FormatStack, quantity: Int) {
     repeat(quantity) { write(formatStack.lineSeparator) }
 }
 

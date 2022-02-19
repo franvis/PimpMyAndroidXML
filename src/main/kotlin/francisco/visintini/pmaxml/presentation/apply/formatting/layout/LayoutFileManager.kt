@@ -6,4 +6,6 @@ import java.nio.file.Path
 interface LayoutFileManager {
 
     fun getLayoutFiles(rootDirectory: Path): List<File>
+
+    fun isLayoutDirectory(directory: Path): Boolean
 }

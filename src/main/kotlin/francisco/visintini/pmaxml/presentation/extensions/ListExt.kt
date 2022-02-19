@@ -13,6 +13,7 @@ inline fun <reified T : Any> List<*>.checkItemsType() =
  * Returns the index of the first T element matching the given predicate and starting to search from
  * the [startIndex], or the size of the list if the list does not contain such element.
  */
+// TODO Review this logic returning size and start returning null when we cannot find it
 fun <T> List<T>.indexOfFirst(start: Int, condition: (obj: T) -> Boolean): Int {
     for (i in start until size) {
         if (condition.invoke(this[i])) return i

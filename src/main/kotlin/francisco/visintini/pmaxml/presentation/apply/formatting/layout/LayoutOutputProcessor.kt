@@ -27,9 +27,9 @@ constructor(
         doc: Document
     ) {
         super.printDocument(writer, fstack, nstack, doc)
-        // Write a line at the end of file. In the future we should make it configurable (disable
-        // it)
-        writer.writeNewEmptyLine(fstack)
+        // TODO Write a line at the end of file.
+        //  In the future we should make it configurable (disable it)
+        writer.writeLineBreak(fstack)
     }
 
     @Throws(IOException::class)
@@ -39,66 +39,98 @@ constructor(
         namespaces: NamespaceStack,
         element: Element
     ) {
-        // Represents the attributes of the current element
-        val attributes = element.attributes
         // Represents the content of the element (within the tags)
         val content = element.content as List<Any>
+        // Represents the attributes of the current element
+        val attributes = element.attributes
 
-        writer.write(AndroidXmlConstants.QUALIFIED_NAME_OPENING_BEGINNING)
-        printQualifiedName(writer, element)
+        printElementOpeningTag(writer, element)
 
-        printElementNamespace(writer, formatStack, element)
         printAdditionalNamespaces(writer, formatStack, element)
+
         if (attributes.isNotNullNorEmpty()) {
-            printAttributes(writer, formatStack, attributes, element.depth())
+            printElementAttributes(writer, formatStack, attributes, element.depth())
         }
 
-        val start = elementContentAnalyzer.getStartOfContentSkippingLeadingWhite(content, 0)
-        val size = content.size
+        val contentStartIndex =
+            elementContentAnalyzer.getStartOfContentSkippingLeadingWhite(content, 0)
+        val contentSize = content.size
         // Print ending of element
-        if (start >= size) {
+        if (contentStartIndex >= contentSize) {
             // Write the closure of content elements (TextView, ImageView, etc)
-            writer.write(AndroidXmlConstants.ELEMENT_CLOSURE_WITHOUT_QUALIFIED_NAME)
-        } else {
-            // Write the closure of group layout elements (LinearLayout, ConstraintLayout, etc)
-            writer.write(AndroidXmlConstants.QUALIFIED_NAME_CLOSURE_END)
-            writer.writeNewEmptyLine(formatStack)
-            if (elementContentAnalyzer.nextNonText(content, start) < size) {
-                writer.writeNewEmptyLine(formatStack)
-                printContentRange(
-                    formatStack, writer, content, start, size, element.depth(), namespaces)
-                writer.writeNewEmptyLine(formatStack)
-                writer.writeIndent(formatStack, element.depth() - 1)
-            } else {
-                printTextRange(formatStack, writer, content, start, size)
+            writer.write(AndroidXmlConstants.OPENING_TAG_WITHOUT_CHILDREN_CLOSURE)
+            writer.writeLineBreak(formatStack)
+            // TODO Make this optional
+            //  The following code makes an extra line break for elements within a parent that are
+            // not the last one
+            //  Maybe some people doesn't want a separation line and prefers to have them glued
+            if (!element.isLastContentOfParent() && element.nextChildrenIsNotComment()) {
+                writer.writeLineBreak(formatStack)
             }
-            writer.write(AndroidXmlConstants.QUALIFIED_NAME_CLOSURE_BEGINNING)
-            printQualifiedName(writer, element)
-            writer.write(AndroidXmlConstants.QUALIFIED_NAME_CLOSURE_END)
-        }
-        /**
-         * If the current element is the root element or is not the last element of the parent we
-         * add a line break. This is to avoid having line breaks between closures of elements, for
-         * example: <pre>{@code
-         * ```
-         *     </androidx.constraintlayout.widget.ConstraintLayout>
-         * ```
-         * </androidx.coordinatorlayout.widget.CoordinatorLayout> }</pre> instead of <pre>{@code
-         * ```
-         *     </androidx.constraintlayout.widget.ConstraintLayout>
-         * ```
-         * </androidx.coordinatorlayout.widget.CoordinatorLayout> }</pre>
-         */
-        if (element.isRootElement || element.isNotLastElementOfParent()) {
-            writer.writeNewEmptyLine(formatStack)
+        } else {
+            // Write the closure of group layout elements (LinearLayout, ConstraintLayout, etc) that
+            // contain elements
+            writer.write(AndroidXmlConstants.OPENING_TAG_WITH_CHILDREN_CLOSURE)
+            // Write empty line to start printing children
+            // TODO Make this configurable
+            //  Maybe some people doesn't want a separation line and prefers to have them glued
+            writer.writeEmptyLine(formatStack)
+
+            printContentRange(
+                formatStack,
+                writer,
+                content,
+                contentStartIndex,
+                contentSize,
+                element.depth(),
+                namespaces)
+            printElementClosingTag(writer, formatStack, element)
         }
     }
 
-    private fun printElementNamespace(writer: Writer, formatStack: FormatStack, element: Element) {
-        with(element) {
-            if (namespace != Namespace.XML_NAMESPACE && (namespace != Namespace.NO_NAMESPACE)) {
-                this@LayoutOutputProcessor.printNamespace(writer, formatStack, namespace)
+    override fun printComment(writer: Writer, formatStack: FormatStack, comment: Comment) {
+        super.printComment(writer, formatStack, comment)
+        with(comment) {
+            val parentIsNotNull = parentElement != null
+            val parentIsNull = parentElement == null
+            when {
+                // We write an entire empty line below the comment when the parent is not null (is
+                // not a direct child
+                // of the document), is not the last element of the parent and the next element is
+                // not another comment
+                parentIsNotNull && isNotLastCommentOfParent() && nextChildrenIsNotComment() ->
+                    writer.writeEmptyLine(formatStack)
+                // We write a normal line break when the comment is a direct child of the document
+                // and in the last
+                // position or the parent is not null (this means is not the last element and the
+                // following element
+                // is not another comment as it is filtered before)
+                (parentIsNull && isLastContentOfDocument()) || parentIsNotNull ->
+                    writer.writeLineBreak(formatStack)
             }
+        }
+    }
+
+    private fun printElementOpeningTag(writer: Writer, element: Element) {
+        // Example: "<"
+        writer.write(AndroidXmlConstants.OPENING_TAG_BEGINNING)
+        // Example: androidx.coordinatorlayout.widget.CoordinatorLayout
+        printQualifiedName(writer, element)
+    }
+
+    private fun printElementClosingTag(writer: Writer, formatStack: FormatStack, element: Element) {
+        writer.writeIndent(formatStack, element.depth() - 1)
+        writer.write(AndroidXmlConstants.CLOSING_TAG_BEGINNING)
+        printQualifiedName(writer, element)
+        writer.write(AndroidXmlConstants.CLOSING_TAG_CLOSURE)
+        when {
+            element.isLastContentOfDocument() -> writer.writeLineBreak(formatStack)
+            // If the element is not the root element and is not the last element of parent we write
+            // an empty line to
+            // separate children elements
+            element.isNotRootElement() && element.isLastContentOfParent().not() ->
+                writer.writeEmptyLine(formatStack)
+            element.isNotRootElement() -> writer.writeLineBreak(formatStack)
         }
     }
 
@@ -124,7 +156,7 @@ constructor(
         element.additionalNamespaces?.forEach {
             with(writer) {
                 if (LayoutFormattingConfig.ATTRIBUTE_INDENTION > 0) {
-                    writeNewEmptyLine(formatStack)
+                    writeLineBreak(formatStack)
                     writeIndent(formatStack, element.depth() - 1)
                     write(LayoutFormattingConfig.INDENT_SPACE)
                 } else {
@@ -148,13 +180,8 @@ constructor(
         var index = start
 
         while (index < end) {
-            val isFirstNode = index == start
             val next = content[index]
             if (next !is Text && next !is EntityRef) {
-                if (!isFirstNode) {
-                    writer.writeNewEmptyLine(formatStack)
-                }
-
                 writer.writeIndent(formatStack, level)
                 printNode(formatStack, writer, next, namespaces)
 
@@ -164,10 +191,6 @@ constructor(
                     elementContentAnalyzer.getStartOfContentSkippingLeadingWhite(content, index)
                 index = elementContentAnalyzer.nextNonText(content, first)
                 if (first < index) {
-                    if (!isFirstNode) {
-                        writer.writeNewEmptyLine(formatStack)
-                    }
-
                     writer.writeIndent(formatStack, level)
                     printTextRange(formatStack, writer, content, first, index)
                 }
@@ -236,7 +259,8 @@ constructor(
                                 node.value +
                                 AndroidXmlConstants.SEMI_COLON
                         } else {
-                            throw IllegalStateException("Should see only CDATA, Text, or EntityRef")
+                            throw IllegalStateException(
+                                "$node Should see only CDATA, Text, or EntityRef")
                         }
                     }
 
@@ -264,7 +288,7 @@ constructor(
         }
     }
 
-    private fun printAttributes(
+    private fun printElementAttributes(
         writer: Writer,
         fstack: FormatStack,
         attribs: List<Attribute>,
@@ -273,7 +297,7 @@ constructor(
         layoutAttributeComparator.sortAttributes(attribs.checkItemsType()).forEach { attrib ->
             with(writer) {
                 // Write indention
-                writeNewEmptyLine(fstack)
+                writeLineBreak(fstack)
                 writeIndent(fstack, elementDepth)
                 // Write qualified name
                 printQualifiedName(writer, attrib)

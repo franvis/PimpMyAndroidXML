@@ -17,7 +17,7 @@ class ElementContentAnalyzer @Inject constructor() {
      */
     fun getEndOfContentSkippingTrailingWhite(elementContent: List<Any>, startIndex: Int): Int {
         val index = elementContent.indexOfFirst(startIndex) { it.isAllWhitespace() }
-        return if (index == -1) elementContent.size - 1 else index
+        return if (index == elementContent.size) elementContent.size - 1 else index
     }
 
     fun getStartOfContentSkippingLeadingWhite(content: List<Any>, start: Int): Int =
