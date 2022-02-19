@@ -27,5 +27,7 @@ java -jar pimp-my-android-xml.jar pimp-my-android-xml-apply [ROOT DIRECTORY WITH
 * [Clikt](https://ajalt.github.io/clikt/)
 
 ## Coming soon:
-* Option to check if certain layouts are compliant with the PimpMyAndroidXML code styling.
-* Option to check and apply styling to drawable xml files
+* Option to check if certain layouts or drawables are compliant with the PimpMyAndroidXML code styling.
+* Gradle plugin to stop using it only through the jar release.
+* Android Studio/Intellij plugin to apply it directly through the IDE
+* Configurable options for indenting and line breaking
