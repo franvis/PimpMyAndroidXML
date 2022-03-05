@@ -1,6 +1,6 @@
 def releasing = [:]
 releasing.main_class = "francisco.visintini.pimpmyandroidxml.presentation.MainKt"
-releasing.archive_name = "pimp-my-android-xml-${releasing.version}.jar"
+releasing.archive_name = "pimp-my-android-xml-${VERSION_NAME}.jar"
 ext.releasing = releasing
 
 def versions = [:]
