@@ -25,8 +25,8 @@ allprojects {
     }
 }
 
-group releasing.group
-version releasing.version
+group GROUP
+version VERSION_NAME
 
 repositories {
     mavenCentral()
