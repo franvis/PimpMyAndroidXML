@@ -8,7 +8,7 @@ versions.kotlin = "1.5.20"
 versions.clikt = "3.2.0"
 versions.ktfmt = "0.25"
 versions.jvm_target = "1.8"
-versions.jdom = "2.0.6"
+versions.jdom = "2.0.6.1"
 versions.dagger = "2.40.1"
 ext.versions = versions
 
