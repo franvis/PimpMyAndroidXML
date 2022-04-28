@@ -1,6 +1,5 @@
 package francisco.visintini.pmaxml.presentation.apply.formatting.layout
 
-import francisco.visintini.pmaxml.presentation.apply.formatting.FileFormatter
 import francisco.visintini.pmaxml.presentation.apply.formatting.utils.AndroidXmlConstants
 import java.io.*
 import javax.inject.Inject
@@ -11,7 +10,7 @@ import org.jdom2.output.XMLOutputter
 @Suppress("UNCHECKED_CAST")
 class LayoutFormatter
 @Inject
-constructor(private val layoutOutputProcessor: LayoutOutputProcessor) : FileFormatter() {
+constructor(private val layoutOutputProcessor: LayoutOutputProcessor) : LayoutFileFormatter {
 
     override fun formatFiles(files: List<File>) {
         files.forEach { format(it.absolutePath) }

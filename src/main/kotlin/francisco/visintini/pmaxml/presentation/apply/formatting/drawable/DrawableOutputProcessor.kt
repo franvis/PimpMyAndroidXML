@@ -3,7 +3,6 @@ package francisco.visintini.pmaxml.presentation.apply.formatting.drawable
 import francisco.visintini.pmaxml.presentation.apply.formatting.jdom.ElementContentAnalyzer
 import francisco.visintini.pmaxml.presentation.apply.formatting.utils.AndroidXmlConstants
 import francisco.visintini.pmaxml.presentation.extensions.*
-import francisco.visintini.pmaxml.presentation.extensions.depth
 import java.io.IOException
 import java.io.Writer
 import javax.inject.Inject
@@ -13,21 +12,24 @@ import org.jdom2.output.support.AbstractXMLOutputProcessor
 import org.jdom2.output.support.FormatStack
 import org.jdom2.util.NamespaceStack
 
+@Suppress("UNCHECKED_CAST")
 class DrawableOutputProcessor
 @Inject
 constructor(
-    private val DrawableAttributeComparator: DrawableAttributeComparator,
+    private val drawableAttributeComparator: DrawableAttributeComparator,
     private val elementContentAnalyzer: ElementContentAnalyzer
 ) : AbstractXMLOutputProcessor() {
 
     override fun printDocument(
-        out: Writer,
+        writer: Writer,
         fstack: FormatStack,
         nstack: NamespaceStack,
         doc: Document
     ) {
-        super.printDocument(out, fstack, nstack, doc)
-        newline(fstack, out)
+        super.printDocument(writer, fstack, nstack, doc)
+        // TODO Write a line at the end of file.
+        //  In the future we should make it configurable (disable it)
+        writer.writeLineBreak(fstack)
     }
 
     @Throws(IOException::class)
@@ -37,37 +39,63 @@ constructor(
         namespaces: NamespaceStack,
         element: Element
     ) {
-        val attributes = element.attributes
+        // Represents the content of the element (within the tags)
         val content = element.content as List<Any>
+        // Represents the attributes of the current element
+        val attributes = element.attributes
 
-        writer.write(AndroidXmlConstants.OPENING_TAG_BEGINNING)
-        printQualifiedName(writer, element)
+        printElementOpeningTag(writer, element)
 
         printAdditionalNamespaces(writer, formatStack, element)
+
         if (attributes.isNotNullNorEmpty()) {
-            printAttributes(writer, formatStack, attributes, element.depth())
+            printElementAttributes(writer, formatStack, attributes, element.depth())
         }
 
-        val start = elementContentAnalyzer.getStartOfContentSkippingLeadingWhite(content, 0)
-        val size = content.size
-        if (start >= size) {
+        val contentStartIndex =
+            elementContentAnalyzer.getStartOfContentSkippingLeadingWhite(content, 0)
+        val contentSize = content.size
+        // Print ending of element
+        if (contentStartIndex >= contentSize) {
+            // Write the closure of content elements (TextView, ImageView, etc)
             writer.write(AndroidXmlConstants.OPENING_TAG_WITHOUT_CHILDREN_CLOSURE)
+            writer.writeLineBreak(formatStack)
         } else {
-            writer.write(AndroidXmlConstants.CLOSING_TAG_CLOSURE)
-            if (elementContentAnalyzer.nextNonText(content, start) < size) {
-                newline(formatStack, writer)
-                printContentRange(
-                    formatStack, writer, content, start, size, element.depth(), namespaces)
-                newline(formatStack, writer)
-                indent(formatStack, writer, element.depth() - 1)
-            } else {
-                printTextRange(formatStack, writer, content, start, size)
-            }
+            // Write the closure of group layout elements (LinearLayout, ConstraintLayout, etc) that
+            // contain elements
+            writer.write(AndroidXmlConstants.OPENING_TAG_WITH_CHILDREN_CLOSURE)
+            writer.writeLineBreak(formatStack)
 
-            writer.write(AndroidXmlConstants.CLOSING_TAG_BEGINNING)
-            printQualifiedName(writer, element)
-            writer.write(AndroidXmlConstants.CLOSING_TAG_CLOSURE)
+            printContentRange(
+                formatStack,
+                writer,
+                content,
+                contentStartIndex,
+                contentSize,
+                element.depth(),
+                namespaces)
+            printElementClosingTag(writer, formatStack, element)
         }
+    }
+
+    override fun printComment(writer: Writer, formatStack: FormatStack, comment: Comment) {
+        super.printComment(writer, formatStack, comment)
+        if (comment.parentElement != null) writer.writeLineBreak(formatStack)
+    }
+
+    private fun printElementOpeningTag(writer: Writer, element: Element) {
+        // Example: "<"
+        writer.write(AndroidXmlConstants.OPENING_TAG_BEGINNING)
+        // Example: androidx.coordinatorlayout.widget.CoordinatorLayout
+        printQualifiedName(writer, element)
+    }
+
+    private fun printElementClosingTag(writer: Writer, formatStack: FormatStack, element: Element) {
+        writer.writeIndent(formatStack, element.depth() - 1)
+        writer.write(AndroidXmlConstants.CLOSING_TAG_BEGINNING)
+        printQualifiedName(writer, element)
+        writer.write(AndroidXmlConstants.CLOSING_TAG_CLOSURE)
+        if (element.isNotRootElement()) writer.writeLineBreak(formatStack)
     }
 
     override fun printNamespace(writer: Writer, formatStack: FormatStack, namespace: Namespace) {
@@ -89,17 +117,18 @@ constructor(
         formatStack: FormatStack,
         element: Element
     ) {
-        val list = element.additionalNamespaces
-        list?.forEach {
-            if (DrawableFormattingConfig.ATTRIBUTE_INDENTION > 0) {
-                newline(formatStack, writer)
-                indent(formatStack, writer, element.depth() - 1)
-                writer.write(DrawableFormattingConfig.INDENT_SPACE)
-            } else {
-                writer.write(AndroidXmlConstants.EMPTY_SPACE)
-            }
+        element.additionalNamespaces?.forEach {
+            with(writer) {
+                if (DrawableFormattingConfig.ATTRIBUTE_INDENTION > 0) {
+                    writeLineBreak(formatStack)
+                    writeIndent(formatStack, element.depth() - 1)
+                    write(DrawableFormattingConfig.INDENT_SPACE)
+                } else {
+                    write(AndroidXmlConstants.EMPTY_SPACE)
+                }
 
-            printNamespace(writer, formatStack, it)
+                printNamespace(writer, formatStack, it)
+            }
         }
     }
 
@@ -115,14 +144,9 @@ constructor(
         var index = start
 
         while (index < end) {
-            val isFirstNode = index == start
             val next = content[index]
             if (next !is Text && next !is EntityRef) {
-                if (!isFirstNode) {
-                    newline(formatStack, writer)
-                }
-
-                indent(formatStack, writer, level)
+                writer.writeIndent(formatStack, level)
                 printNode(formatStack, writer, next, namespaces)
 
                 ++index
@@ -131,11 +155,7 @@ constructor(
                     elementContentAnalyzer.getStartOfContentSkippingLeadingWhite(content, index)
                 index = elementContentAnalyzer.nextNonText(content, first)
                 if (first < index) {
-                    if (!isFirstNode) {
-                        newline(formatStack, writer)
-                    }
-
-                    indent(formatStack, writer, level)
+                    writer.writeIndent(formatStack, level)
                     printTextRange(formatStack, writer, content, first, index)
                 }
             }
@@ -145,18 +165,18 @@ constructor(
     private fun printNode(
         formatStack: FormatStack,
         writer: Writer,
-        next: Any,
+        node: Any,
         namespaces: NamespaceStack
     ) {
-        when (next) {
+        when (node) {
             is Comment -> {
-                printComment(writer, formatStack, next)
+                printComment(writer, formatStack, node)
             }
             is Element -> {
-                printElement(writer, formatStack, namespaces, next)
+                printElement(writer, formatStack, namespaces, node)
             }
             is ProcessingInstruction -> {
-                printProcessingInstruction(writer, formatStack, next)
+                printProcessingInstruction(writer, formatStack, node)
             }
         }
     }
@@ -180,17 +200,18 @@ constructor(
         formatStack: FormatStack,
         writer: Writer,
         elementContentItems: List<Any>,
-        start: Int,
-        end: Int
+        startIndex: Int,
+        endIndex: Int
     ) {
         var previous: String? = null
         val actualStart =
-            elementContentAnalyzer.getStartOfContentSkippingLeadingWhite(elementContentItems, start)
+            elementContentAnalyzer.getStartOfContentSkippingLeadingWhite(
+                elementContentItems, startIndex)
 
         if (actualStart < elementContentItems.size) {
             val actualEnd =
                 elementContentAnalyzer.getEndOfContentSkippingTrailingWhite(
-                    elementContentItems, end)
+                    elementContentItems, endIndex)
             for (i in actualStart..actualEnd) {
                 val node = elementContentItems[i]
                 val next: String =
@@ -202,7 +223,8 @@ constructor(
                                 node.value +
                                 AndroidXmlConstants.SEMI_COLON
                         } else {
-                            throw IllegalStateException("Should see only CDATA, Text, or EntityRef")
+                            throw IllegalStateException(
+                                "$node Should see only CDATA, Text, or EntityRef")
                         }
                     }
 
@@ -210,7 +232,7 @@ constructor(
                     if (previous != null &&
                         (formatStack.textMode == NORMALIZE || formatStack.textMode == TRIM) &&
                         (previous.endsWithWhite() || next.startsWithWhite())) {
-                        writer.write(AndroidXmlConstants.EMPTY_SPACE)
+                        writer.writeEmptySpace()
                     }
 
                     when (node) {
@@ -230,39 +252,24 @@ constructor(
         }
     }
 
-    private fun newline(formatStack: FormatStack, writer: Writer) {
-        writer.write(formatStack.lineSeparator)
-    }
-
-    private fun indent(formatStack: FormatStack, writer: Writer, level: Int) {
-        repeat(level) { writer.write(formatStack.indent) }
-    }
-
-    override fun printAttribute(out: Writer, fstack: FormatStack, attribute: Attribute) {
-        super.printAttribute(out, fstack, attribute)
-    }
-
-    private fun printAttributes(
+    private fun printElementAttributes(
         writer: Writer,
         fstack: FormatStack,
         attribs: List<Attribute>,
         elementDepth: Int
     ) {
-        DrawableAttributeComparator.sortAttributes(attribs.checkItemsType()).forEach { attrib ->
-            // Write indention
-            if (DrawableFormattingConfig.ATTRIBUTE_INDENTION > 0) {
-                newline(fstack, writer)
-                indent(fstack, writer, elementDepth - 1)
-                writer.write(DrawableFormattingConfig.INDENT_SPACE)
-            } else {
-                writer.write(AndroidXmlConstants.EMPTY_SPACE)
+        drawableAttributeComparator.sortAttributes(attribs.checkItemsType()).forEach { attrib ->
+            with(writer) {
+                // Write indention
+                writeLineBreak(fstack)
+                writeIndent(fstack, elementDepth)
+                // Write qualified name
+                printQualifiedName(writer, attrib)
+                // Write attribute value
+                write(AndroidXmlConstants.BEGINNING_OF_VALUE)
+                attributeEscapedEntitiesFilter(writer, fstack, attrib.value)
+                write(AndroidXmlConstants.END_OF_VALUE)
             }
-            // Write qualified name
-            printQualifiedName(writer, attrib)
-            // Write attribute
-            writer.write(AndroidXmlConstants.BEGINNING_OF_VALUE)
-            attributeEscapedEntitiesFilter(writer, fstack, attrib.value)
-            writer.write(AndroidXmlConstants.END_OF_VALUE)
         }
     }
 

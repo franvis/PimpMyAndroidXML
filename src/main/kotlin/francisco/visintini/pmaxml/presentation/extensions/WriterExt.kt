@@ -20,10 +20,6 @@ fun Writer.writeIndent(formatStack: FormatStack, level: Int = 1) {
     repeat(level) { write(formatStack.indent) }
 }
 
-fun Writer.writeIndent(customIndentSize: Int, level: Int = 1) {
-    repeat(level) { write(EMPTY_SPACE.repeat(customIndentSize)) }
-}
-
 /** Writes an [EMPTY_SPACE] */
 fun Writer.writeEmptySpace() {
     write(EMPTY_SPACE)

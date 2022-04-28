@@ -1,5 +1,7 @@
 package francisco.visintini.pmaxml.presentation.apply.formatting
 
+import francisco.visintini.pmaxml.presentation.apply.PimpMyAndroidXmlApply
+import francisco.visintini.pmaxml.presentation.apply.PimpMyAndroidXmlApply.FileType.*
 import francisco.visintini.pmaxml.presentation.apply.formatting.drawable.DrawableFileManager
 import francisco.visintini.pmaxml.presentation.apply.formatting.drawable.DrawableFormatter
 import francisco.visintini.pmaxml.presentation.apply.formatting.layout.LayoutFileManager
@@ -12,7 +14,7 @@ import kotlin.io.path.pathString
 import kotlin.system.exitProcess
 
 @Suppress("UNCHECKED_CAST")
-class AllDocumentsFormatter
+class FilesFormatter
 @Inject
 constructor(
     private val layoutFormatter: LayoutFormatter,
@@ -23,24 +25,28 @@ constructor(
 
     /** Formats all possible documents (Drawables and Layout files for now). */
     // TODO Add here the option to skip certain directories/files
-    fun formatAllDocuments(rootPath: String) {
+    fun formatFiles(rootPath: String, fileType: PimpMyAndroidXmlApply.FileType) {
         try {
-            Files.walk(Path.of(rootPath)).use { paths ->
-                paths.filter { isSafeDirectory(it) }.forEach {
-                    when {
-                        drawableFileManager.isDrawableDirectory(it) ->
-                            drawableFormatter.formatFiles(drawableFileManager.getDrawableFiles(it))
-                        layoutFileManager.isLayoutDirectory(it) -> {
-                            layoutFormatter.formatFiles(layoutFileManager.getLayoutFiles(it))
-                        }
-                    }
-                }
+            Files.walk(Path.of(rootPath)).filter { isSafeDirectory(it) }.forEach {
+                if (fileType == ALL || fileType == DRAWABLE) formatDrawableFiles(it)
+
+                if (fileType == ALL || fileType == LAYOUT) formatLayoutFiles(it)
             }
         } catch (io: Exception) {
             println("An exception occurred while formating the file")
             io.printStackTrace()
             exitProcess(1)
         }
+    }
+
+    private fun formatDrawableFiles(path: Path) {
+        if (drawableFileManager.isDrawableDirectory(path))
+            drawableFormatter.formatFiles(drawableFileManager.getDrawableFiles(path))
+    }
+
+    private fun formatLayoutFiles(path: Path) {
+        if (layoutFileManager.isLayoutDirectory(path))
+            layoutFormatter.formatFiles(layoutFileManager.getLayoutFiles(path))
     }
 
     private fun isSafeDirectory(path: Path): Boolean {

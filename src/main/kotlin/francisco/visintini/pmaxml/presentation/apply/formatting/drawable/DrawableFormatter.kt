@@ -1,7 +1,5 @@
 package francisco.visintini.pmaxml.presentation.apply.formatting.drawable
 
-import francisco.visintini.pmaxml.presentation.apply.formatting.FileFormatter
-import francisco.visintini.pmaxml.presentation.apply.formatting.layout.LayoutFormattingConfig
 import francisco.visintini.pmaxml.presentation.apply.formatting.utils.AndroidXmlConstants
 import java.io.*
 import javax.inject.Inject
@@ -13,7 +11,7 @@ import org.jdom2.output.XMLOutputter
 @Suppress("UNCHECKED_CAST")
 class DrawableFormatter
 @Inject
-constructor(private val drawableOutputProcessor: DrawableOutputProcessor) : FileFormatter() {
+constructor(private val drawableOutputProcessor: DrawableOutputProcessor) : DrawableFileFormatter {
 
     override fun formatFiles(files: List<File>) {
         try {
@@ -30,7 +28,7 @@ constructor(private val drawableOutputProcessor: DrawableOutputProcessor) : File
         val outputter =
             XMLOutputter(
                 Format.getPrettyFormat().apply {
-                    indent = LayoutFormattingConfig.INDENT_SPACE
+                    this.indent = DrawableFormattingConfig.INDENT_SPACE
                     lineSeparator = AndroidXmlConstants.LINE_BREAK
                     encoding = AndroidXmlConstants.UTF_8
                 },

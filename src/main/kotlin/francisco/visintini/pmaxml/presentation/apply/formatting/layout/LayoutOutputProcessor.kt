@@ -29,7 +29,7 @@ constructor(
         super.printDocument(writer, fstack, nstack, doc)
         // TODO Write a line at the end of file.
         //  In the future we should make it configurable (disable it)
-        writer.writeLineBreak(fstack)
+        writer.writeEmptyLine(fstack)
     }
 
     @Throws(IOException::class)
@@ -92,7 +92,6 @@ constructor(
         super.printComment(writer, formatStack, comment)
         with(comment) {
             val parentIsNotNull = parentElement != null
-            val parentIsNull = parentElement == null
             when {
                 // We write an entire empty line below the comment when the parent is not null (is
                 // not a direct child
@@ -100,13 +99,10 @@ constructor(
                 // not another comment
                 parentIsNotNull && isNotLastCommentOfParent() && nextChildrenIsNotComment() ->
                     writer.writeEmptyLine(formatStack)
-                // We write a normal line break when the comment is a direct child of the document
-                // and in the last
-                // position or the parent is not null (this means is not the last element and the
-                // following element
-                // is not another comment as it is filtered before)
-                (parentIsNull && isLastContentOfDocument()) || parentIsNotNull ->
-                    writer.writeLineBreak(formatStack)
+                // We write a normal line break when the parent is not null (this means is not the
+                // last element and the
+                // following element is not another comment as it is filtered before)
+                parentIsNotNull -> writer.writeLineBreak(formatStack)
             }
         }
     }
@@ -124,7 +120,6 @@ constructor(
         printQualifiedName(writer, element)
         writer.write(AndroidXmlConstants.CLOSING_TAG_CLOSURE)
         when {
-            element.isLastContentOfDocument() -> writer.writeLineBreak(formatStack)
             // If the element is not the root element and is not the last element of parent we write
             // an empty line to
             // separate children elements
